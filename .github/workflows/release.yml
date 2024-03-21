@@ -15,15 +15,23 @@ jobs:
       new_sha: ${{ steps.out.outputs.SHA }}
       version: ${{ steps.out.outputs.VERSION }}
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          # required
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v4
         with:
+          token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 0
 
       - name: Create bump and changelog
         uses: commitizen-tools/commitizen-action@master
         with:
           changelog_increment_filename: body.md
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github_token: ${{ steps.app-token.outputs.token }}
 
       - uses: actions/upload-artifact@v4
         with:
