@@ -140,10 +140,12 @@ for bv in blending_value:
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([0, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
+    robot.move_jb2_add(rc, np.array([0, 0, 0, 0, 0, 0]), 100, 100, bv)
+    robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_run(rc)
 
     data = []
-    if robot.wait_for_move_started(rc, 0.1).type() == rb.ReturnType.Success:
+    if robot.wait_for_move_started(rc, 0.5).type() == rb.ReturnType.Success:
         while robot.wait_for_move_finished(rc, 0.).type() == rb.ReturnType.Timeout:
             data.append(data_channel.request_data().sdata.jnt_ref)
             time.sleep(0.01)
