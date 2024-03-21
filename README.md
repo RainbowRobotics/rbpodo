@@ -2,20 +2,16 @@
 
 <p>
 <a href="https://github.com/RainbowRobotics/rbpodo/actions">
-<img src="https://img.shields.io/github/actions/workflow/status/RainbowRobotics/rbpodo/release.yml
-" alt="CI">
+<img src="https://img.shields.io/github/actions/workflow/status/RainbowRobotics/rbpodo/release.yml" alt="CI">
 </a>
 <a href="https://github.com/RainbowRobotics/rbpodo/issues">
-<img src="https://img.shields.io/github/issues/RainbowRobotics/rbpodo
-" alt="Issues">
+<img src="https://img.shields.io/github/issues/RainbowRobotics/rbpodo" alt="Issues">
 </a>
 <a href="https://github.com/RainbowRobotics/rbpodo/releases">
-<img src="https://img.shields.io/github/v/release/RainbowRobotics/rbpodo
-" alt="Releases">
+<img src="https://img.shields.io/github/v/release/RainbowRobotics/rbpodo" alt="Releases">
 </a>
 <a href="https://github.com/RainbowRobotics/rbpodo/blob/main/LICENSE">
-<img src="https://img.shields.io/github/license/RainbowRobotics/rbpodo
-" alt="Apache-2.0">
+<img src="https://img.shields.io/github/license/RainbowRobotics/rbpodo" alt="Apache-2.0">
 </a>
 <a href="https://github.com/RainbowRobotics/rbpodo/blob/main/LICENSE">
 <img src="https://img.shields.io/pypi/pyversions/rbpodo" alt="python">
