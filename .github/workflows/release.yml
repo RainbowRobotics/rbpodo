@@ -1,0 +1,121 @@
+name: Bump version and release
+run-name: 🎉 Release - ${{ github.event.head_commit.message }}
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bump-version:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    name: "Bump version and create changelog with commitizen"
+    outputs:
+      new_sha: ${{ steps.out.outputs.SHA }}
+      version: ${{ steps.out.outputs.VERSION }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create bump and changelog
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          changelog_increment_filename: body.md
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: changelog_increment_file
+          path: body.md
+
+      - name: Set outputs for next jobs
+        id: out
+        run: |
+          sha_new=$(git rev-parse HEAD)
+          echo $sha_new
+          echo "::set-output name=SHA::$sha_new"
+          echo "::set-output name=VERSION::$REVISION"
+      - run:
+          echo ${{ steps.out.outputs.SHA }}
+          echo ${{ steps.out.outputs.REVISION }}
+
+  build-wheels:
+    needs: [bump-version]
+
+    runs-on: ${{ matrix.os }}
+    name: "Build wheels"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, windows-latest ]
+        python-version: [ '3.12', '3.11', '3.10', '3.9', '3.8', '3.7' ]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.new_sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install scikit-build-core
+        run: python -m pip install scikit-build-core
+
+      - name: Build wheels
+        run: python -m pip wheel . -w wheelhouse
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
+
+  release:
+    needs: [bump-version, build-wheels]
+
+    runs-on: ubuntu-latest
+    name: "Release with python packages"
+#    environment: release
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+      contents: write
+      packages: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.new_sha }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: changelog_increment_file
+          path: ./
+          merge-multiple: true
+
+      - name: Download python wheels
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cibw-wheels-*
+          path: ./wheelhouse
+          merge-multiple: true
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: "body.md"
+          files: ./wheelhouse/*
+          tag_name: v${{ needs.bump-version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: ./wheelhouse/

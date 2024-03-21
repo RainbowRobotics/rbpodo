@@ -1,0 +1,14 @@
+get_filename_component(RBPODO_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+include(CMakeFindDependencyMacro)
+
+list(APPEND CMAKE_MODULE_PATH ${RBPODO_CMAKE_DIR})
+
+if(@BUILD_WITH_EIGEN@)
+find_dependency(Eigen3)
+endif()
+
+if(NOT TARGET rbpodo::rbpodo)
+    include("${RBPODO_CMAKE_DIR}/rbpodo-targets.cmake")
+endif()
+
+set(RBPODO_lIBRARIES rbpodo::rbpodo)

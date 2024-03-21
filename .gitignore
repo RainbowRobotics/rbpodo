@@ -1,0 +1,17 @@
+# IDE
+.vscode
+.idea
+
+# C++
+cmake-build-debug*
+cmake-build-release*
+build
+CMakeUserPresets.json
+CMakeUserPresets.json
+
+# Python
+__pycache__
+.venv
+*.egg-info
+
+*.whl
