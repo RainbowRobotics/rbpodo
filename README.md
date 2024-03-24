@@ -166,10 +166,10 @@ You can plot ``q`` via ``plt.plot(np.arange(0, q.shape[1]) * 0.01, np.transpose(
 ### Realtime script
 
 ``rt_script()`` allows for the direct integration of custom scripts into the real-time control loop executed within the
-control box of robotic arm systems. By enabling computation to be carried out locally within the control box, it
-significantly reduces communication latency associated with the updating of variables crucial for the arm's operation.
+control box of robotic arm systems. By enabling computation to be carried out locally in the control box, it
+significantly reduces communication latency associated with the updating control output to robot arm.
 For instance, variables related to the feedback loop—such as joint positions and electrical current measurements—can be
-computed directly in the control box. 
+accessed directly in the control box. 
 
 The following is the part of [example](./examples/rt_script.cpp).
 ```c++
