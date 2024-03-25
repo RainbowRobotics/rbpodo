@@ -339,7 +339,8 @@ ReturnType
             };
             ASYNC_FUNC_WRAPPER_HELPER(_f)
           },
-          py::arg("response_collector"), py::arg("variable_name"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+          py::arg("response_collector"), py::arg("variable_name"), py::arg("timeout") = -1.,
+          py::arg("return_on_error") = false)
       .def("set_operation_mode", &PyCobot<T>::set_operation_mode, py::arg("response_collector"), py::arg("mode"),
            py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(
 Change the operation mode between real and simulation modes.
@@ -359,6 +360,76 @@ return_on_error : bool
 Returns
 -------
 ReturnType
+)pbdoc")
+      .def(
+          "get_tcp_info",
+          [](PyCobot<T>* self, ResponseCollector* response_collector, double timeout, bool return_on_error) {
+            auto _f = [=] {
+              typename EigenVector::Point pnt;
+              auto res = static_cast<Cobot<EigenVector>&>(*self).get_tcp_info(*response_collector, pnt, timeout,
+                                                                              return_on_error);
+              return std::make_pair(res, pnt);
+            };
+            ASYNC_FUNC_WRAPPER_HELPER(_f)
+          },
+          py::arg("response_collector"), py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(
+This function returns the TCP information of the current robot.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+
+numpy.ndarray(shape=(6, 1))
+    TCP of the current robot based on the global coordinate system. (Unit: mm & degree)
+
+
+Examples
+--------
+>>> [res, pnt] = robot.get_tcp_info(rc)
+)pbdoc")
+      .def(
+          "get_tfc_info",
+          [](PyCobot<T>* self, ResponseCollector* response_collector, double timeout, bool return_on_error) {
+            auto _f = [=] {
+              typename EigenVector::Point pnt;
+              auto res = static_cast<Cobot<EigenVector>&>(*self).get_tfc_info(*response_collector, pnt, timeout,
+                                                                              return_on_error);
+              return std::make_pair(res, pnt);
+            };
+            ASYNC_FUNC_WRAPPER_HELPER(_f)
+          },
+          py::arg("response_collector"), py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(
+This function returns the TFC (Tool flange center) information of the current robot.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+
+numpy.ndarray(shape=(6, 1))
+    TFC of the current robot based on the global coordinate system. (Unit: mm & degree)
+
+
+Examples
+--------
+>>> [res, pnt] = robot.get_tfc_info(rc)
 )pbdoc")
       .def("set_speed_bar", &PyCobot<T>::set_speed_bar, py::arg("response_collector"), py::arg("speed"),
            py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(

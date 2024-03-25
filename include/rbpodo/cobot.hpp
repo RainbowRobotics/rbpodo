@@ -357,7 +357,7 @@ class Cobot {
   }
 
   ReturnType print_variable(ResponseCollector& response_collector, const std::string& variable_name, std::string& out,
-                                 double timeout = -1., bool return_on_error = false) {
+                            double timeout = -1., bool return_on_error = false) {
     const auto& id = randstr();
     std::stringstream ss;
     ss << "print(" << variable_name << ",\"" << id << R"([", "]"))";
@@ -365,6 +365,54 @@ class Cobot {
     auto res = wait_until_ack_message(response_collector, timeout, return_on_error);
     if (res.is_success()) {
       return wait_for_printed_value(response_collector, out, std::regex(id + "\\[(.*)\\]"), res.remain_time(),
+                                    return_on_error);
+    } else {
+      return res;
+    }
+  }
+
+  /**
+   * This function returns the TCP information of the current robot.
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[out] point Returns the TCP of the current robot based on the global coordinate system. (Unit: mm & degree)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType get_tcp_info(ResponseCollector& response_collector, PointRef point, double timeout = -1.,
+                          bool return_on_error = false) {
+    const auto& id = randstr();
+    std::stringstream ss;
+    ss << "print(get_tcp_info(), \"" << id << R"([", "]"))";
+    sock_.send(ss.str());
+    auto res = wait_until_ack_message(response_collector, timeout, return_on_error);
+    if (res.is_success()) {
+      return wait_for_printed_value(response_collector, point, std::regex(id + "\\[(.*)\\]"), res.remain_time(),
+                                    return_on_error);
+    } else {
+      return res;
+    }
+  }
+
+  /**
+   * This function returns the TFC (Tool flange center) information of the current robot.
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[out] point Returns the TFC of the current robot based on the global coordinate system. (Unit: mm & degree)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType get_tfc_info(ResponseCollector& response_collector, PointRef point, double timeout = -1.,
+                          bool return_on_error = false) {
+    const auto& id = randstr();
+    std::stringstream ss;
+    ss << "print(get_tfc_info(), \"" << id << R"([", "]"))";
+    sock_.send(ss.str());
+    auto res = wait_until_ack_message(response_collector, timeout, return_on_error);
+    if (res.is_success()) {
+      return wait_for_printed_value(response_collector, point, std::regex(id + "\\[(.*)\\]"), res.remain_time(),
                                     return_on_error);
     } else {
       return res;
@@ -1251,7 +1299,7 @@ class Cobot {
   }
 
   ReturnType rt_script(ResponseCollector& response_collector, const std::string& single_command, double timeout = -1.,
-                             bool return_on_error = false) {
+                       bool return_on_error = false) {
     std::stringstream ss;
     ss << "rt_script(" << single_command << ")";
     sock_.send(ss.str());
