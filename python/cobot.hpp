@@ -389,7 +389,7 @@ Returns
 ReturnType
 
 numpy.ndarray(shape=(6, 1))
-    TCP of the current robot based on the global coordinate system. (Unit: mm & degree)
+    TCP of the current robot with respect to the global coordinate system. (Unit: mm & degree)
 
 
 Examples
@@ -445,6 +445,63 @@ response_collector : ResponseCollector
     A collector object to accumulate and manage the response message.
 speed : float
     Desired speed control bar position (0~1)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+      .def("set_payload_info", &PyCobot<T>::set_payload_info, py::arg("response_collector"), py::arg("weight"),
+           py::arg("com_x"), py::arg("com_y"), py::arg("com_z"), py::arg("timeout") = -1,
+           py::arg("return_on_error") = false, R"pbdoc(
+Set the tool payload w.r.t. the manufacturer’s default tool coordinate system.
+
+Warning
+-------
+The value set in this function returns to the default value after the program ends.
+If this function is not called in program-flow, the value set in the Setup page is used.
+During program flow, the value set in this function is maintained until this function is called again.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+weight : float
+    payload weight (Unit: Kg)
+com_x : float
+    payload center of mass x-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+com_y : float
+    payload center of mass y-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+com_z : float
+    payload center of mass z-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+      .def("set_tcp_info", &PyCobot<T>::set_tcp_info, py::arg("response_collector"), py::arg("point"),
+           py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(
+Set the TCP position and orientation w.r.t. the manufacturer’s default tool coordinate system.
+
+Warning
+-------
+The value set in this function returns to the default value after the program ends.
+If this function is not called in program-flow, the value set in the Setup page is used.
+During program flow, the value set in this function is maintained until this function is called again.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+point : numpy.ndarray(shape=(6, 1))
+    position and orientation of tcp with respect to manufacturer's default tool coordinate system. (x, y, z, rx, ry, rz) (Unit: mm & degree)
 timeout : float
     The maximum duration (in seconds) to wait for a response before timing out.
 return_on_error : bool

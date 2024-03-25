@@ -419,6 +419,52 @@ class Cobot {
     }
   }
 
+  /**
+   * Set the tool payload w.r.t. the manufacturer’s default tool coordinate system.
+   *
+   * @warning The value set in this function returns to the default value after the program ends.
+   * If this function is not called in program-flow, the value set in the Setup page is used.
+   * During program flow, the value set in this function is maintained until this function is called again.
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] weight payload weight (Unit: Kg)
+   * @param[in] com_x payload center of mass x-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+   * @param[in] com_y payload center of mass y-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+   * @param[in] com_z payload center of mass z-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType set_payload_info(ResponseCollector& response_collector, double weight, double com_x, double com_y,
+                              double com_z, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "set_payload_info(" << weight << "," << com_x << "," << com_y << "," << com_z << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * Set the TCP position and orientation w.r.t. the manufacturer’s default tool coordinate system.
+   *
+   * @warning The value set in this function returns to the default value after the program ends.
+   * If this function is not called in program-flow, the value set in the Setup page is used.
+   * During program flow, the value set in this function is maintained until this function is called again.
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] point position and orientation of tcp with respect to manufacturer's default tool coordinate system. (x, y, z, rx, ry, rz) (Unit: mm & degree)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType set_tcp_info(ResponseCollector& response_collector, PointConstRef point, double timeout = -1.,
+                          bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "set_tcp_info(" << point[0] << "," << point[1] << "," << point[2] << "," << point[3] << "," << point[4] << ","
+       << point[5] << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
   ReturnType set_operation_mode(ResponseCollector& response_collector, OperationMode mode, double timeout = -1.,
                                 bool return_on_error = false) {
     std::stringstream ss;
