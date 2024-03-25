@@ -465,6 +465,25 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  /**
+   * Set user coordinate
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] id id of user coordinate to change (0~2)
+   * @param[in] point position and orientation of coordinate with respect to base frame. (x, y, z, rx, ry, rz) (Unit: mm & degree)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType set_user_coordinate(ResponseCollector& response_collector, int id, PointConstRef point,
+                                 double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "set rb_manual_user_coord_6d " << id << ",1," << point[0] << "," << point[1] << "," << point[2] << "," << point[3]
+       << "," << point[4] << "," << point[5];
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
   ReturnType set_operation_mode(ResponseCollector& response_collector, OperationMode mode, double timeout = -1.,
                                 bool return_on_error = false) {
     std::stringstream ss;
