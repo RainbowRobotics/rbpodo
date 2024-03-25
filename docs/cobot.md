@@ -10,6 +10,20 @@
 Cobot(const std::string& address, int port = kCommandPort);
 ```
 
+## get_control_box_info
+
+```c++
+ReturnType get_control_box_info(ResponseCollector& response_collector, ControlBoxInfo& info, double timeout = -1.,
+                                bool return_on_error = false);
+```
+
+## get_robot_state
+
+```c++
+ReturnType get_robot_state(ResponseCollector& response_collector, RobotState& robot_state, double timeout = -1.,
+                           bool return_on_error = false);
+```
+
 ## activate
 
 ```c++
@@ -27,6 +41,48 @@ ReturnType shutdown(ResponseCollector& response_collector, double timeout = -1.,
 ```c++
 ReturnType get_system_variable(ResponseCollector& response_collector, SystemVariable sv, double& out,
                                double timeout = -1., bool return_on_error = false);
+```
+
+## print_variable
+
+```c++
+ReturnType print_variable(ResponseCollector& response_collector, const std::string& variable_name, std::string& out,
+                          double timeout = -1., bool return_on_error = false);
+```
+
+## set_payload_info
+
+```c++
+ReturnType set_payload_info(ResponseCollector& response_collector, double weight, double com_x, double com_y,
+                            double com_z, double timeout = -1., bool return_on_error = false);
+```
+
+## get_tcp_info
+
+```c++
+ReturnType get_tcp_info(ResponseCollector& response_collector, PointRef point, double timeout = -1.,
+                        bool return_on_error = false);
+```
+
+## get_tfc_info
+
+```c++
+ReturnType get_tfc_info(ResponseCollector& response_collector, PointRef point, double timeout = -1.,
+                        bool return_on_error = false);
+```
+
+## set_tcp_info
+
+```c++
+ReturnType set_tcp_info(ResponseCollector& response_collector, PointConstRef point, double timeout = -1.,
+                        bool return_on_error = false);
+```
+
+## set_user_coordinate
+
+```c++
+ReturnType set_user_coordinate(ResponseCollector& response_collector, int id, PointConstRef point, double timeout = -1.,
+                               bool return_on_error = false);
 ```
 
 ## set_operation_mode

@@ -28,6 +28,9 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, shutdown, (double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_operation_mode, (OperationMode, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_speed_bar, (double, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_payload_info, (double, _a)(double, _b)(double, _c)(double, _d)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_tcp_info, (PointConstRef, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_user_coordinate, (int, _a)(PointConstRef, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_freedrive_mode, (bool, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_collision_onoff, (bool, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_collision_threshold, (double, _a)(double, _to)(bool, _roe))
@@ -502,6 +505,27 @@ response_collector : ResponseCollector
     A collector object to accumulate and manage the response message.
 point : numpy.ndarray(shape=(6, 1))
     position and orientation of tcp with respect to manufacturer's default tool coordinate system. (x, y, z, rx, ry, rz) (Unit: mm & degree)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+      .def("set_user_coordinate", &PyCobot<T>::set_user_coordinate, py::arg("response_collector"), py::arg("id"),
+           py::arg("point"), py::arg("timeout") = -1, py::arg("return_on_error") = false, R"pbdoc(
+Set user coordinate
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+id : int
+    id of user coordinate to change (0~2)
+point : numpy.ndarray(shape=(6, 1))
+    position and orientation of coordinate with respect to base frame. (x, y, z, rx, ry, rz) (Unit: mm & degree)
 timeout : float
     The maximum duration (in seconds) to wait for a response before timing out.
 return_on_error : bool
