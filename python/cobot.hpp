@@ -1569,7 +1569,7 @@ ReturnType
            py::arg("return_on_error") = false)
       .def("task_pause", &PyCobot<T>::task_pause, py::arg("response_collector"), py::arg("timeout") = -1.,
            py::arg("return_on_error") = false)
-      .def("task_resume", &PyCobot<T>::task_resume, py::arg("response_collector"), py::arg("reactive_collision"),
+      .def("task_resume", &PyCobot<T>::task_resume, py::arg("response_collector"), py::arg("collision"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("rt_script_onoff", &PyCobot<T>::rt_script_onoff, py::arg("response_collector"), py::arg("on"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)

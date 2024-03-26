@@ -1347,10 +1347,10 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
-  ReturnType task_resume(ResponseCollector& response_collector, bool reactive_collision, double timeout = -1.,
+  ReturnType task_resume(ResponseCollector& response_collector, bool collision, double timeout = -1.,
                          bool return_on_error = false) {
     std::stringstream ss;
-    ss << "task resume_" << (reactive_collision ? "b" : "a");
+    ss << "task resume_" << (collision ? "b" : "a");
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
