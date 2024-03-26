@@ -1,3 +1,9 @@
+## v0.10.1 (2024-03-26)
+
+### 🐛 Fixes
+
+- **wait_for_task_loaded**: modify return condition - even if 'return_on_error' is true, when receiving the error message (load nofile), the function returns error
+
 ## v0.10.0 (2024-03-25)
 
 ### ✨ Features
