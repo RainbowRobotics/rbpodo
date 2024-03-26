@@ -13,7 +13,7 @@
 <a href="https://github.com/RainbowRobotics/rbpodo/blob/main/LICENSE">
 <img src="https://img.shields.io/github/license/RainbowRobotics/rbpodo" alt="Apache-2.0">
 </a>
-<a href="https://github.com/RainbowRobotics/rbpodo/blob/main/LICENSE">
+<a href="https://pypi.org/project/rbpodo/">
 <img src="https://img.shields.io/pypi/pyversions/rbpodo" alt="python">
 </a>
 </p>
