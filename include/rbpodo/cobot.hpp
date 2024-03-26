@@ -165,7 +165,7 @@ class ReturnType {
  public:
   enum Type { Undefined, Success, Timeout, Error };
 
-  explicit ReturnType(Type type = Undefined, double remain_time = 0.) : type_(type), remain_time_(remain_time) {}
+  ReturnType(Type type = Undefined, double remain_time = 0.) : type_(type), remain_time_(remain_time) {}
 
   [[nodiscard]] Type type() const { return type_; }
 
@@ -478,8 +478,8 @@ class Cobot {
   ReturnType set_user_coordinate(ResponseCollector& response_collector, int id, PointConstRef point,
                                  double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
-    ss << "set rb_manual_user_coord_6d " << id << ",1," << point[0] << "," << point[1] << "," << point[2] << "," << point[3]
-       << "," << point[4] << "," << point[5];
+    ss << "set rb_manual_user_coord_6d " << id << ",1," << point[0] << "," << point[1] << "," << point[2] << ","
+       << point[3] << "," << point[4] << "," << point[5];
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -1371,12 +1371,24 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  /// Even if 'return_on_error' is true, when receiving the error message (load nofile), this function returns error
   ReturnType wait_for_task_loaded(ResponseCollector& response_collector, double timeout = -1.,
                                   bool return_on_error = true) {
-    const auto& check = [=](const Response& res) {
+    const auto check_done = [=](const Response& res) {
       return res.type() == Response::Type::Info && res.category() == "load" && res.msg() == "done";
     };
-    return wait_until(response_collector, check, timeout, return_on_error);
+    const auto check_no_file = [=](const Response& res) {
+      return res.type() == Response::Type::Error && res.category() == "load" && res.msg() == "nofile";
+    };
+
+    const auto& check = [=](const Response& res) {
+      return check_done(res) || check_no_file(res);
+    };
+    auto res = wait_until(response_collector, check, timeout, return_on_error);
+    if (res.is_success() && check_no_file(response_collector.back())) {
+      return {ReturnType::Error, res.remain_time()};
+    }
+    return res;
   }
 
   ReturnType wait_for_task_started(ResponseCollector& response_collector, double timeout = -1.,
