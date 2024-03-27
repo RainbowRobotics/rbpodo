@@ -9,6 +9,8 @@ int main() {
     auto robot = Cobot("10.0.2.7");
     auto rc = ResponseCollector();
 
+    robot.flush(rc);
+
     robot.task_load(rc, "default");
     if(robot.wait_for_task_loaded(rc).type() == ReturnType::Success) {
       std::cout << "'default' wsl exists" << std::endl;
@@ -16,6 +18,8 @@ int main() {
       std::cerr << "Error" << std::endl;
     }
     rc = rc.error().throw_if_not_empty();
+
+    robot.flush(rc);
 
     robot.task_load(rc, "default_does_not_exist");
     if(robot.wait_for_task_loaded(rc).type() == ReturnType::Error) {

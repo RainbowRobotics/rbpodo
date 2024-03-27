@@ -40,6 +40,8 @@ async def move_thread():
     await robot.set_speed_bar(rc, 0.5)
 
     try:
+        await robot.flush(rc)
+
         await robot.move_j(rc, np.array([0, 0, 0, 0, 0, 0]), 600, 800)
         rc = rc.error().throw_if_not_empty()
         if (await robot.wait_for_move_started(rc, 0.5)).type() == rb.ReturnType.Success:

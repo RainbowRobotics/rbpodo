@@ -16,9 +16,14 @@ def _main():
         robot.move_pb_add(rc, np.array([100, 200, 200, 90, 0, 0]), 200.0, rb.BlendingOption.Ratio, 0.5)
         robot.move_pb_add(rc, np.array([300, 300, 400, 0, 0, 0]), 400.0, rb.BlendingOption.Ratio, 0.5)
         robot.move_pb_add(rc, np.array([0, 200, 400, 90, 0, 0]), 200.0, rb.BlendingOption.Ratio, 0.5)
-        robot.move_pb_run(rc, 800, rb.MovePBOption.Intended)
-        rc = rc.error().throw_if_not_empty()
 
+        # **Important**
+        # Before you start move, flush buffer to response collector to avoid unexpected behavior in 'wait' function
+        robot.flush(rc)
+        rc = rc.error().throw_if_not_empty()
+        rc.clear()
+
+        robot.move_pb_run(rc, 800, rb.MovePBOption.Intended)
         if robot.wait_for_move_started(rc, 0.1).type() == rb.ReturnType.Success:
             robot.wait_for_move_finished(rc)
         rc = rc.error().throw_if_not_empty()

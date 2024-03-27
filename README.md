@@ -84,6 +84,8 @@ int main() {
     robot.set_operation_mode(rc, podo::OperationMode::Simulation);
     robot.set_speed_bar(rc, 0.5);
 
+    robot.flush(rc);
+    
     // Move robot in joint space
     robot.move_j(rc, {100, 0, 0, 0, 0, 0}, 200, 400);
     if (robot.wait_for_move_started(rc, 0.1).type() == podo::ReturnType::Success) {
@@ -116,6 +118,8 @@ def _main():
         robot.set_operation_mode(rc, rb.OperationMode.Simulation)
         robot.set_speed_bar(rc, 0.5)
 
+        robot.flush(rc)
+        
         robot.move_j(rc, np.array([100, 0, 0, 0, 0, 0]), 200, 400)
         if robot.wait_for_move_started(rc, 0.1).type() == rb.ReturnType.Success:
             robot.wait_for_move_finished(rc)
@@ -142,6 +146,8 @@ for bv in blending_value:
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([0, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
+    
+    robot.flush(rc)
     robot.move_jb2_run(rc)
 
     data = []

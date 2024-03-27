@@ -21,6 +21,8 @@ def _main():
             return
         print("Task loaded successfully")
 
+        robot.flush(rc)
+
         robot.task_play(rc)
         if robot.wait_for_task_started(rc, 0.1).type() == rb.ReturnType.Success:
             print("Task started ...")
