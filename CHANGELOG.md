@@ -1,3 +1,10 @@
+## v0.10.2 (2024-03-27)
+
+### 🐛 Fixes
+
+- **flush**: flush buffer before using wait functions
+- **task_resume**: rename 'reactive_collision' to 'collision'
+
 ## v0.10.1 (2024-03-26)
 
 ### 🐛 Fixes
