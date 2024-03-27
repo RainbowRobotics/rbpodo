@@ -12,6 +12,8 @@ def _main():
         robot.set_operation_mode(rc, rb.OperationMode.Simulation)
         robot.set_speed_bar(rc, 0.5)
 
+        robot.flush(rc)
+
         robot.move_j(rc, np.array([100, 0, 0, 0, 0, 0]), 200, 400)
         if robot.wait_for_move_started(rc, 0.1).type() == rb.ReturnType.Success:
             robot.wait_for_move_finished(rc)

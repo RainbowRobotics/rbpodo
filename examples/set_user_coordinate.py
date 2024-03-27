@@ -21,6 +21,8 @@ def _main():
             exit(-1)
         rc = rc.error().throw_if_not_empty()
 
+        robot.flush(rc)
+
         robot.move_l_rel(rc, np.array([100, 0, 0, 0, 0, 0]), 100, 200, rb.ReferenceFrame.User0)
         if robot.wait_for_move_started(rc, 0.5).type() == rb.ReturnType.Success:
             robot.wait_for_move_finished(rc)

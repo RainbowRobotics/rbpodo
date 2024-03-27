@@ -9,6 +9,8 @@ def _main():
     robot.set_operation_mode(rc, rb.OperationMode.Simulation)
     robot.set_speed_bar(rc, 0.5)
 
+    robot.flush(rc)
+
     joint = np.array([180 * 10, 0, 0, 0, 0, 0])  # Raise an error!
     robot.move_j(rc, joint, 60, 80)
 

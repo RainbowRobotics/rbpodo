@@ -16,9 +16,14 @@ int main() {
     robot.move_pb_add(rc, {100, 200, 200, 90, 0, 0}, 200.0, rb::podo::BlendingOption::Ratio, 0.5);
     robot.move_pb_add(rc, {300, 300, 400, 0, 0, 0}, 400.0, rb::podo::BlendingOption::Ratio, 0.5);
     robot.move_pb_add(rc, {0, 200, 400, 90, 0, 0}, 200.0, rb::podo::BlendingOption::Ratio, 0.5);
-    robot.move_pb_run(rc, 800, rb::podo::MovePBOption::Intended);
-    rc = rc.error().throw_if_not_empty();
 
+    // **Important**
+    // Before you start move, flush buffer to response collector to avoid unexpected behavior in 'wait' function
+    robot.flush(rc);
+    rc = rc.error().throw_if_not_empty();
+    rc.clear();
+
+    robot.move_pb_run(rc, 800, rb::podo::MovePBOption::Intended);
     auto res = robot.wait_for_move_started(rc, 0.5);
     if (res.is_success()) {
       robot.wait_for_move_finished(rc);

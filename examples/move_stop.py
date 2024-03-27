@@ -27,6 +27,7 @@ def _main():
                 time.sleep(1.0e-3)
             # Or you can use following condition
             # ``robot.wait_for_task_finished(rc)``
+        robot.flush(rc)
         rc = rc.error().throw_if_not_empty()
     except Exception as e:
         print(e)

@@ -1564,7 +1564,7 @@ class Cobot {
   ReturnType wait_for_move_started(ResponseCollector& response_collector, double timeout = -1.,
                                    bool return_on_error = true) {
     const auto& check = [=](const Response& res) {
-      return res.type() == Response::Type::Info && res.category() == "motion_changed";
+      return res.type() == Response::Type::Info && res.category() == "motion_changed" && res.msg() != "0";
     };
     return wait_until(response_collector, check, timeout, return_on_error);
   }
@@ -1572,7 +1572,7 @@ class Cobot {
   ReturnType wait_for_move_finished(ResponseCollector& response_collector, double timeout = -1.,
                                     bool return_on_error = true) {
     const auto& check = [=](const Response& res) {
-      return res.type() == Response::Type::Info && res.category() == "motion_changed" && res.msg()[0] == '0';
+      return res.type() == Response::Type::Info && res.category() == "motion_changed" && res.msg() == "0";
     };
     return wait_until(response_collector, check, timeout, return_on_error);
   }

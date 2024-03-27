@@ -17,6 +17,7 @@ int main() {
     robot.set_operation_mode(rc, podo::OperationMode::Simulation);
     robot.set_speed_bar(rc, 0.5);
 
+    robot.flush(rc);
     // Move robot in joint space
     robot.move_j(rc, {100, 0, 0, 0, 0, 0}, 200, 400);
     if (robot.wait_for_move_started(rc, 0.1).type() == podo::ReturnType::Success) {
