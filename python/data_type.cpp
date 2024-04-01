@@ -499,13 +499,13 @@ Control box analog output information of each channel (unit: Voltage)
 Channel number: 0~3
 )pbdoc")
       .def_property_readonly(
-          "digital_in", [](const SystemState::Data& data) { return py::array_t<int>(6, data.digital_in); }, R"pbdoc(
+          "digital_in", [](const SystemState::Data& data) { return py::array_t<int>(16, data.digital_in); }, R"pbdoc(
 Control box digital input measurement information of each channel (value: 0 or 1)
 
 Channel number: 0~15
 )pbdoc")
       .def_property_readonly(
-          "digital_out", [](const SystemState::Data& data) { return py::array_t<int>(6, data.digital_out); }, R"pbdoc(
+          "digital_out", [](const SystemState::Data& data) { return py::array_t<int>(16, data.digital_out); }, R"pbdoc(
 Control box digital output information of each channel (value: 0 or 1)
 
 Channel number: 0~15
