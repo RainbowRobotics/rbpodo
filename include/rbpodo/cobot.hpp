@@ -289,7 +289,7 @@ class Cobot {
    * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
    * @return ReturnType
    */
-  ReturnType activate(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+  ReturnType activate(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = true) {
     double state_info;
     auto res = get_system_variable(response_collector, SystemVariable::SD_INIT_STATE_INFO, state_info, timeout,
                                    return_on_error);
@@ -322,7 +322,7 @@ class Cobot {
    * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
    * @return ReturnType
    */
-  ReturnType shutdown(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+  ReturnType shutdown(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = true) {
     std::stringstream ss;
     ss << "AvadaKedavra()";
     sock_.send(ss.str());

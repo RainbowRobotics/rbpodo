@@ -9,10 +9,10 @@ int main() {
     auto robot = podo::Cobot("10.0.2.7");
     auto rc = podo::ResponseCollector();
 
-    std::cout << "Activating... ";
+    std::cout << "Activating... " << std::endl;
     robot.activate(rc);
     rc.error().throw_if_not_empty();
-    std::cout << "done" << std::endl;
+    std::cout << "  done" << std::endl;
 
     std::this_thread::sleep_for(std::chrono::seconds(2));
 
