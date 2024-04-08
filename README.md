@@ -18,7 +18,8 @@
 </a>
 </p>
 
-> :warning: **Note:** The API is currently under development and is subject to change.
+> [!WARNING]
+> The API is currently under development and is subject to change.
 
 This is a client library for Rainbow Robotics' cobots [RB-Series](https://www.rainbow-robotics.com/en_rb). It is
 compatible with C++17.
@@ -119,7 +120,7 @@ def _main():
         robot.set_speed_bar(rc, 0.5)
 
         robot.flush(rc)
-        
+
         robot.move_j(rc, np.array([100, 0, 0, 0, 0, 0]), 200, 400)
         if robot.wait_for_move_started(rc, 0.1).type() == rb.ReturnType.Success:
             robot.wait_for_move_finished(rc)
@@ -146,7 +147,7 @@ for bv in blending_value:
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([0, 0, 0, 0, 0, 0]), 100, 100, bv)
     robot.move_jb2_add(rc, np.array([90, 0, 0, 0, 0, 0]), 100, 100, bv)
-    
+
     robot.flush(rc)
     robot.move_jb2_run(rc)
 
@@ -163,11 +164,44 @@ You can plot ``q`` via ``plt.plot(np.arange(0, q.shape[1]) * 0.01, np.transpose(
 
 ![img](./docs/res/move_jb2.png)
 
+### ``Wait`` functions
+
+We provide ``wait`` functions for convenient external control. However, to achieve the intended behavior, it is
+necessary to understand the mechanism and use the ``wait`` functions accurately.
+Processes and the control box exchange commands and data through port 5000.
+After an external process sends a command, the control box sends back an ACK message indicating that the command has
+been executed (as shown in steps 1 and 2 in the dialog below).
+Afterward, whenever an event occurs (such as the start or end of move), the corresponding event message is delivered to
+all connected processes. The ``wait`` function operates by parsing this event message to check if a certain condition
+has been met.
+
+![wait_func](./docs/res/wait_func.png)
+
+If only one process is connected to the control box, this is generally not a problem. However, if multiple processes (or
+multiple computers) are connected, it may not work as expected. For example, in the illustration below, if while the
+``wait_for_move_finished`` function is checking in process 1, some other process triggers an error unrelated to move (
+such as trying to read a nonexistent variable), the control box will send an error message to all connected processes.
+In such cases, the ``wait`` function (if ``return_on_error`` is true) will assume an error has
+occurred and immediately return.
+
+![wait_func_with_error](./docs/res/wait_func_with_error.png)
+
+To solve this problem, one can either repeatedly check whether an error is related to movement or check whether the
+robot's state is idle. (or you can check though port 5001 data channel.)
+
+```python
+while robot.get_robot_state(rc)[1] == rb.RobotState.Moving:
+    time.sleep(1.0e-3)
+```
+
+Additionally, due to this mechanism, before using ``wait`` function, it is necessary to flush all messages in the
+buffer (a storage for messages from the control box that have not yet been processed) to avoid the program mistaking the
+result of a previous move (or command) for the result of the current command.
+
 ## Advanced Topic
 
-> :warning: **Note:** This is experimental feature. Be careful when you use this.
-
-
+> [!WARNING]
+> This is experimental feature. Be careful when you use this.
 
 ### Realtime script
 
@@ -175,9 +209,10 @@ You can plot ``q`` via ``plt.plot(np.arange(0, q.shape[1]) * 0.01, np.transpose(
 control box of robotic arm systems. By enabling computation to be carried out locally in the control box, it
 significantly reduces communication latency associated with the updating control output to robot arm.
 For instance, variables related to the feedback loop—such as joint positions and electrical current measurements—can be
-accessed directly in the control box. 
+accessed directly in the control box.
 
 The following is the part of [example](./examples/rt_script.cpp).
+
 ```c++
 robot.eval(rc, "var count = 0");
 

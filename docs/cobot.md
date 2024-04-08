@@ -1,8 +1,10 @@
 # Cobot Class
 
-> :info: This page is under actively construction. You can find the hints in header files.
+> [!IMPORTANT]
+> This page is under actively construction. You can find the hints in header files.
 
-> :warning: **Note:** These APIs are not thread-safe.
+> [!WARNING]
+> These APIs are not thread-safe.
 
 ## ``Cobot`` constructor
 
