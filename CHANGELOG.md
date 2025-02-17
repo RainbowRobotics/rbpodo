@@ -1,3 +1,10 @@
+## v0.10.3 (2025-02-17)
+
+### 🐛 Fixes
+
+- change return mechanism on activate and shutdown function
+- **python_binding**: set the size of digital in/out to 16 not 6
+
 ## v0.10.2 (2024-03-27)
 
 ### 🐛 Fixes
