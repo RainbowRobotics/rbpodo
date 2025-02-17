@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14)
 if (NOT DEFINED SKBUILD_PROJECT_VERSION)
     file(READ ${CMAKE_SOURCE_DIR}/pyproject.toml PYPROJECT_STR)
     string(REGEX MATCHALL "[^\n\r]+" PYPROJECT_STR_LIST "${PYPROJECT_STR}")
