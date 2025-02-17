@@ -6,7 +6,7 @@ if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.24)
     cmake_policy(SET CMP0135 OLD)
 endif ()
 
-find_package(Python 3 COMPONENTS Interpreter Development REQUIRED)
+find_package(Python 3 COMPONENTS Interpreter Development.Module REQUIRED)
 
 include(FetchContent)
 set(EXTERNALS_DIR ${CMAKE_BINARY_DIR}/external)
