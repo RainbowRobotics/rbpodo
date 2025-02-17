@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "rbpodo"
-version = "0.10.2"
+version = "0.10.3"
 description = "A client library for Rainbow Robotics' cobot RB-Series"
 readme = "README.md"
 license = {file = "LICENSE"}
