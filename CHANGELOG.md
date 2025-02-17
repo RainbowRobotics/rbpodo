@@ -1,3 +1,9 @@
+## v0.10.5 (2025-02-17)
+
+### 🐛 Fixes
+
+- fix CI with cibuildwheel
+
 ## v0.10.4 (2025-02-17)
 
 ### 🐛 Fixes
