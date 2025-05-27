@@ -1,9 +1,3 @@
-## v0.10.4 (2025-05-27)
-
-### 🐛 Fixes
-
-- **python_binding**: with pybind11 v3.0.0, this repository is now compatible with Numpy 2.x.x
-
 ## v0.10.3 (2025-02-17)
 
 ### 🐛 Fixes
