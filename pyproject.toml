@@ -4,12 +4,13 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "rbpodo"
-version = "0.14.0"
+version = "0.15.0"
 dependencies = [
     "pybind11>=2.11.1,<3.0.0rc1 ; python_version < '3.8'",
     "numpy>=1.19,<2.0 ; python_version < '3.8'",
     
-    "pybind11>=3.0.0rc1 ; python_version >= '3.8'"
+    "pybind11>=3.0.0rc1 ; python_version >= '3.8'",
+    "numpy>=1.19 ; python_version >= '3.8'",
 ]
 description = "A client library for Rainbow Robotics' cobot RB-Series"
 readme = "README.md"

@@ -30,7 +30,6 @@ if (${CMAKE_VERSION} VERSION_GREATER_EQUAL 3.24)
 endif ()
 
 if (BUILD_PYTHON_BINDINGS)
-
     find_package(Eigen3 CONFIG QUIET)
     if (Eigen3_FOUND)
         message(STATUS "Found Eigen3: ${Eigen3_DIR}")
@@ -45,8 +44,11 @@ if (BUILD_PYTHON_BINDINGS)
                 SOURCE_DIR ${EXTERNALS_DIR}/eigen
                 EXCLUDE_FROM_ALL
         )
+        
         set(BUILD_TESTING OFF CACHE BOOL "")
+        message(STATUS "fetch content make available")
         FetchContent_MakeAvailable(libeigen)
+        message(STATUS "done")
         unset(BUILD_TESTING CACHE)
     endif ()
 endif ()
