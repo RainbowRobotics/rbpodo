@@ -29,6 +29,7 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_operation_mode, (OperationMode, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_speed_bar, (double, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_payload_info, (double, _a)(double, _b)(double, _c)(double, _d)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_tool_box, (double, _a)(double, _b)(double, _c)(double, _d)(double, _e)(double, _f)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_tcp_info, (PointConstRef, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_user_coordinate, (int, _a)(PointConstRef, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, set_freedrive_mode, (bool, _a)(double, _to)(bool, _roe))
@@ -89,6 +90,9 @@ class PyCobot : public Cobot<EigenVector> {
                         (JointConstRef, _a)(double, _b)(double, _c)(double, _d)(double, _e)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_speed_l,
                         (PointConstRef, _a)(double, _b)(double, _c)(double, _d)(double, _e)(double, _to)(bool, _roe))
+
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_tool_out,
+                        (int, _a)(int, _b)(int, _c)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_rts_rhp12rn_select_mode,
                         (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_rts_rhp12rn_set_force_limit,
@@ -97,6 +101,18 @@ class PyCobot : public Cobot<EigenVector> {
                         (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_rts_rhp12rn_position_control,
                         (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
+
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_core_initialization,
+                        (GripperConnectionPoint, _a)(int, _b)(int, _c)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_vaccum_control,
+                        (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_finger_initialization,
+                        (GripperConnectionPoint, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_finger_open_close,
+                        (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_finger_goto,
+                        (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
+
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_load, (std::string, _a)(double, _to)(bool, _roe))  // NOLINT
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_play, (double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_stop, (double, _to)(bool, _roe))
@@ -480,6 +496,42 @@ com_y : float
     payload center of mass y-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
 com_z : float
     payload center of mass z-axis value with respect to the manufacturer's default coordinate system. (Unit: mm)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+      .def("set_tool_box", &PyCobot<T>::set_tool_box, py::arg("response_collector"), py::arg("x_width"),
+           py::arg("y_width"), py::arg("z_width"), py::arg("x_offset"), py::arg("y_offset"), py::arg("z_offset"), py::arg("timeout") = -1,
+           py::arg("return_on_error") = false, R"pbdoc(
+Set the tool box w.r.t. the manufacturer’s default tool coordinate system.
+
+Warning
+-------
+The value set in this function returns to the default value after the program ends.
+If this function is not called in program-flow, the value set in the Setup page is used.
+During program flow, the value set in this function is maintained until this function is called again.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+x_width : float
+    width of tool along x-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+y_width : float
+    width of tool along y-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+z_width : float
+    width of tool along z-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+x_offset : float
+    offset of box along x-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+y_offset : float
+    offset of box along y-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+z_offset : float
+    offset of box along z-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
 timeout : float
     The maximum duration (in seconds) to wait for a response before timing out.
 return_on_error : bool
@@ -1549,6 +1601,10 @@ ReturnType
       .def("move_speed_l", &PyCobot<T>::move_speed_l, py::arg("response_collector"), py::arg("joint"), py::arg("t1"),
            py::arg("t2"), py::arg("gain"), py::arg("alpha"), py::arg("timeout") = -1.,
            py::arg("return_on_error") = false)
+
+      .def("set_tool_out", &PyCobot<T>::set_tool_out,
+           py::arg("response_collector"), py::arg("voltage"), py::arg("signal_0"), py::arg("signal_1"), py::arg("timeout") = -1.,
+           py::arg("return_on_error") = false)
       .def("gripper_rts_rhp12rn_select_mode", &PyCobot<T>::gripper_rts_rhp12rn_select_mode,
            py::arg("response_collector"), py::arg("conn_point"), py::arg("force"), py::arg("timeout") = -1.,
            py::arg("return_on_error") = false)
@@ -1561,6 +1617,23 @@ ReturnType
       .def("gripper_rts_rhp12rn_position_control", &PyCobot<T>::gripper_rts_rhp12rn_position_control,
            py::arg("response_collector"), py::arg("conn_point"), py::arg("target_position_ratio"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
+      .def("gripper_koras_tooling_core_initialization", &PyCobot<T>::gripper_koras_tooling_core_initialization,
+           py::arg("response_collector"), py::arg("conn_point"), py::arg("target_torque"), py::arg("target_speed"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_koras_tooling_vaccum_control", &PyCobot<T>::gripper_koras_tooling_vaccum_control,
+           py::arg("response_collector"), py::arg("conn_point"), py::arg("vaccum_on_off"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_koras_tooling_finger_initialization", &PyCobot<T>::gripper_koras_tooling_finger_initialization,
+           py::arg("response_collector"), py::arg("conn_point"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_koras_tooling_finger_open_close", &PyCobot<T>::gripper_koras_tooling_finger_open_close,
+           py::arg("response_collector"), py::arg("conn_point"), py::arg("finger_open_close"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_koras_tooling_finger_goto", &PyCobot<T>::gripper_koras_tooling_finger_goto,
+           py::arg("response_collector"), py::arg("conn_point"), py::arg("target_position"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
       .def("task_load", &PyCobot<T>::task_load, py::arg("response_collector"), py::arg("program_name"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("task_play", &PyCobot<T>::task_play, py::arg("response_collector"), py::arg("timeout") = -1.,

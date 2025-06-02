@@ -645,6 +645,9 @@ enum class GripperModel {
   Baumer_Laser_Sensor,
   Mighty_12LF,
   JRT_JEGH_3520,
+  SeeN_Grip,
+  TESOLLO_DG_3F,
+  KORAS_Tooling,
 };
 
 enum class GripperConnectionPoint { ToolFlange = 0, ControlBox, ToolFlange_Advanced };

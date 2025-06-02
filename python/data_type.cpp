@@ -434,7 +434,10 @@ void pybind11_data_type(py::module_& m) {
       .value("Schunk_Coact", GripperModel::Schunk_Coact)
       .value("Baumer_Laser_Sensor", GripperModel::Baumer_Laser_Sensor)
       .value("Mighty_12LF", GripperModel::Mighty_12LF)
-      .value("JRT_JEGH_3520", GripperModel::JRT_JEGH_3520);
+      .value("JRT_JEGH_3520", GripperModel::JRT_JEGH_3520)
+      .value("SeeN_Grip", GripperModel::SeeN_Grip)
+      .value("TESOLLO_DG_3F", GripperModel::TESOLLO_DG_3F)
+      .value("KORAS_Tooling", GripperModel::KORAS_Tooling);
 
   py::enum_<GripperConnectionPoint>(m, "GripperConnectionPoint")
       .value("ToolFlange", GripperConnectionPoint::ToolFlange)

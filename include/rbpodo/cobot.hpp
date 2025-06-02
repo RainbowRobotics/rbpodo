@@ -444,6 +444,32 @@ class Cobot {
   }
 
   /**
+   * Set the tool volume w.r.t. the manufacturer’s default tool coordinate system.
+   *
+   * @warning The value set in this function returns to the default value after the program ends.
+   * If this function is not called in program-flow, the value set in the Setup page is used.
+   * During program flow, the value set in this function is maintained until this function is called again.
+   *
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] x_width width of tool along x-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] y_width width of tool along y-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] z_width width of tool along z-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] x_offset offset of box along x-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] y_offset offset of box along y-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] z_offset offset of box along z-axis with respect to the manufacturer's default tool coordinate system. (Unit: mm)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType set_tool_box(ResponseCollector& response_collector, double x_width, double y_width, double z_width,
+                              double x_offset, double y_offset, double z_offset, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "set rb_tool_box " << x_width << "," << y_width << "," << z_width << "," << x_offset << "," << y_offset << "," << z_offset;
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
    * Set the TCP position and orientation w.r.t. the manufacturer’s default tool coordinate system.
    *
    * @warning The value set in this function returns to the default value after the program ends.
@@ -1274,6 +1300,15 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  ReturnType set_tool_out(ResponseCollector& response_collector, int voltage,
+                                             int signal_0, int signal_1, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "tool_out " << (int)voltage << "," << (int)signal_0 << "," << (int)signal_1;
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
   ReturnType gripper_rts_rhp12rn_select_mode(ResponseCollector& response_collector, GripperConnectionPoint conn_point,
                                              bool force, double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
@@ -1309,6 +1344,56 @@ class Cobot {
     std::stringstream ss;
     ss << "gripper_macro " << (int)GripperModel::Robotis_RH_P12_RN << "," << (int)conn_point << ",2"
        << ",0," << target_position_ratio << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_koras_tooling_core_initialization(ResponseCollector& response_collector,
+                                                  GripperConnectionPoint conn_point, int target_torque, int target_speed,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::KORAS_Tooling << "," << (int)conn_point << ",0"
+       << ",0," << (int)target_torque << "," << (int)target_speed << ",0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_koras_tooling_vaccum_control(ResponseCollector& response_collector,
+                                                  GripperConnectionPoint conn_point, int vaccum_on_off,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::KORAS_Tooling << "," << (int)conn_point << ",1"
+       << ",0," << (int)vaccum_on_off << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_koras_tooling_finger_initialization(ResponseCollector& response_collector,
+                                                  GripperConnectionPoint conn_point,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::KORAS_Tooling << "," << (int)conn_point << ",2"
+       << ",0,0,0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_koras_tooling_finger_open_close(ResponseCollector& response_collector,
+                                                  GripperConnectionPoint conn_point, int finger_open_close,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::KORAS_Tooling << "," << (int)conn_point << ",3"
+       << ",0," << (int)finger_open_close << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_koras_tooling_finger_goto(ResponseCollector& response_collector,
+                                                  GripperConnectionPoint conn_point, int target_position,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::KORAS_Tooling << "," << (int)conn_point << ",4"
+       << ",0," << (int)target_position << ",0,0,0,0,0";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
