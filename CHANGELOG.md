@@ -1,3 +1,9 @@
+## v0.16.1 (2025-06-02)
+
+### 🐛 Fixes
+
+- some functions about tool are added
+
 ## v0.16.0 (2025-05-30)
 
 ## v0.14.0 (2025-05-29)
