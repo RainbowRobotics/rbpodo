@@ -648,6 +648,11 @@ enum class GripperModel {
   SeeN_Grip,
   TESOLLO_DG_3F,
   KORAS_Tooling,
+  DH_Robotics_PG_Series,
+  DH_Robotics_CG_Series,
+  DH_Robotics_AG_Series,
+  Any_AIR,
+  Inspire_Humanoid_Hand,
 };
 
 enum class GripperConnectionPoint { ToolFlange = 0, ControlBox, ToolFlange_Advanced };

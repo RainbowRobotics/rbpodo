@@ -1398,6 +1398,24 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  ReturnType gripper_inspire_humanoid_hand_initialization(ResponseCollector& response_collector,
+                                                  int reading_data_type,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::Inspire_Humanoid_Hand << ",0,0,0," << (int)reading_data_type << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  ReturnType gripper_inspire_humanoid_hand_set_finger(ResponseCollector& response_collector,
+                                                  int function, int little, int ring, int middle, int index, int thumb1, int thumb2,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::Inspire_Humanoid_Hand << ",0," << (int)function << ",0," << (int)little << "," << (int)ring << "," << (int)middle << "," << (int)index << "," << (int)thumb1 << "," << (int)thumb2;
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
   ReturnType task_load(ResponseCollector& response_collector, std::string program_name, double timeout = -1.,
                        bool return_on_error = true) {
     trim(program_name);

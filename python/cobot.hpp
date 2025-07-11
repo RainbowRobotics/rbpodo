@@ -112,6 +112,11 @@ class PyCobot : public Cobot<EigenVector> {
                         (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_koras_tooling_finger_goto,
                         (GripperConnectionPoint, _a)(int, _b)(double, _to)(bool, _roe))
+                        
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_inspire_humanoid_hand_initialization,
+                        (int, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_inspire_humanoid_hand_set_finger,
+                        (int, _a)(int, _b)(int, _c)(int, _d)(int, _e)(int, _f)(int, _g)(double, _to)(bool, _roe))
 
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_load, (std::string, _a)(double, _to)(bool, _roe))  // NOLINT
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_play, (double, _to)(bool, _roe))
@@ -1632,6 +1637,13 @@ ReturnType
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("gripper_koras_tooling_finger_goto", &PyCobot<T>::gripper_koras_tooling_finger_goto,
            py::arg("response_collector"), py::arg("conn_point"), py::arg("target_position"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
+      .def("gripper_inspire_humanoid_hand_initialization", &PyCobot<T>::gripper_inspire_humanoid_hand_initialization,
+           py::arg("response_collector"), py::arg("reading_data_type"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_inspire_humanoid_hand_set_finger", &PyCobot<T>::gripper_inspire_humanoid_hand_set_finger,
+           py::arg("response_collector"), py::arg("function"), py::arg("little"), py::arg("ring"), py::arg("middle"), py::arg("index"), py::arg("thumb1"), py::arg("thumb2"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
 
       .def("task_load", &PyCobot<T>::task_load, py::arg("response_collector"), py::arg("program_name"),
