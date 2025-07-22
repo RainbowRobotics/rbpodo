@@ -1,3 +1,9 @@
+## v0.16.3 (2025-07-22)
+
+### 🐛 Fixes
+
+- Inspire Hand Function Explanation Added
+
 ## v0.16.2 (2025-07-11)
 
 ### 🐛 Fixes
