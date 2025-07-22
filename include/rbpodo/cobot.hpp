@@ -1398,6 +1398,16 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  /**
+   * This function executes initialization for RH56BFX and sets the reading data type.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] reading_data_type 0: Force, 1: Position, 2: Angle, 3: Current, 4: Status
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
   ReturnType gripper_inspire_humanoid_hand_initialization(ResponseCollector& response_collector,
                                                   int reading_data_type,
                                                   double timeout = -1., bool return_on_error = false) {
@@ -1406,6 +1416,22 @@ class Cobot {
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
+
+  /**
+   * This function executes finger motion for RH56BFX.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] function 1: Angle, 2: Position, 3: Force, 4: Speed
+   * @param[in] little a value for the little finger (0~100)
+   * @param[in] ring a value for the ring finger (0~100)
+   * @param[in] middle a value for the middle finger (0~100)
+   * @param[in] index a value for the index finger (0~100)
+   * @param[in] thumb1 a value for the thumb1 finger (0~100)
+   * @param[in] thumb2 a value for the thumb2 finger (0~100)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
 
   ReturnType gripper_inspire_humanoid_hand_set_finger(ResponseCollector& response_collector,
                                                   int function, int little, int ring, int middle, int index, int thumb1, int thumb2,
