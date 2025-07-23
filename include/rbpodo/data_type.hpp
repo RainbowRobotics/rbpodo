@@ -651,6 +651,7 @@ enum class GripperModel {
   DH_Robotics_PG_Series,
   DH_Robotics_CG_Series,
   DH_Robotics_AG_Series,
+  GRK_Laser_Sensor,
   Any_AIR,
   Inspire_Humanoid_Hand,
 };
