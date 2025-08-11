@@ -118,6 +118,20 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_inspire_humanoid_hand_set_finger,
                         (int, _a)(int, _b)(int, _c)(int, _d)(int, _e)(int, _f)(int, _g)(double, _to)(bool, _roe))
 
+       
+  ASYNC_FUNC_WRAPPER_RC(Cobot, arc_on,
+                        (double, _a)(double, _b)(double, _c)(double, _d)(int, _e)(double, _f)(int, _g)(double, _h)
+                        (double, _i)(int, _j)(int, _k)(int, _l)(double, _m)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, arc_off,
+                        (double, _a)(double, _b)(int, _c)(double, _d)(double, _e)(double, _f)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, arc_set,
+                        (double, _a)(double, _b)(double, _c)(int, _d)(double, _e)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_on,
+                        (int, _a)(int, _b)(double, _c)(double, _d)(int, _e)(int, _f)(double, _g)(double, _h)(double, _i)(double, _j)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_off, (double, _to)(bool, _roe))
+
+                        
+
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_load, (std::string, _a)(double, _to)(bool, _roe))  // NOLINT
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_play, (double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_stop, (double, _to)(bool, _roe))
@@ -1639,12 +1653,34 @@ ReturnType
            py::arg("response_collector"), py::arg("conn_point"), py::arg("target_position"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
 
+
       .def("gripper_inspire_humanoid_hand_initialization", &PyCobot<T>::gripper_inspire_humanoid_hand_initialization,
            py::arg("response_collector"), py::arg("reading_data_type"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("gripper_inspire_humanoid_hand_set_finger", &PyCobot<T>::gripper_inspire_humanoid_hand_set_finger,
            py::arg("response_collector"), py::arg("function"), py::arg("little"), py::arg("ring"), py::arg("middle"), py::arg("index"), py::arg("thumb1"), py::arg("thumb2"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
+
+      .def("arc_on", &PyCobot<T>::arc_on,
+           py::arg("response_collector"), py::arg("initial_wait"), py::arg("speed"), py::arg("accel"), py::arg("welding_current"),
+           py::arg("voltage_out_condition"), py::arg("voltage"), py::arg("use_arc_timeout"), py::arg("arc_timeout"), py::arg("wait_after_arc"), 
+           py::arg("when_pause"), py::arg("speed_bar_under_arc"), py::arg("arc_retries"), py::arg("retries_interval"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("arc_off", &PyCobot<T>::arc_off,
+           py::arg("response_collector"), py::arg("initial_wait"), py::arg("welding_current"), py::arg("voltage_out_condition"), py::arg("voltage"), 
+           py::arg("wait_welding_finishing"), py::arg("wait_after_finishing"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("arc_set", &PyCobot<T>::arc_off,
+           py::arg("response_collector"), py::arg("speed"), py::arg("accel"), py::arg("welding_current"), py::arg("voltage_out_condition"), py::arg("voltage"), 
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("arc_sensing_on", &PyCobot<T>::arc_sensing_on,
+           py::arg("response_collector"), py::arg("sensing_input_channel"), py::arg("tracking_target_value"), py::arg("dt1"), py::arg("dt2"),
+           py::arg("frame"), py::arg("axis"), py::arg("tracking_gain"), py::arg("variation_limit"), py::arg("lpf"), py::arg("variation_speed_limit"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("arc_sensing_off", &PyCobot<T>::arc_sensing_off,
+           py::arg("response_collector"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
 
       .def("task_load", &PyCobot<T>::task_load, py::arg("response_collector"), py::arg("program_name"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)

@@ -1422,12 +1422,12 @@ class Cobot {
    * 
    * @param[in] response_collector A collector object to accumulate and manage the response message.
    * @param[in] function 1: Angle, 2: Position, 3: Force, 4: Speed
-   * @param[in] little a value for the little finger (0~100)
-   * @param[in] ring a value for the ring finger (0~100)
-   * @param[in] middle a value for the middle finger (0~100)
-   * @param[in] index a value for the index finger (0~100)
-   * @param[in] thumb1 a value for the thumb1 finger (0~100)
-   * @param[in] thumb2 a value for the thumb2 finger (0~100)
+   * @param[in] little A value for the little finger (0~100)
+   * @param[in] ring A value for the ring finger (0~100)
+   * @param[in] middle A value for the middle finger (0~100)
+   * @param[in] index A value for the index finger (0~100)
+   * @param[in] thumb1 A value for the thumb1 finger (0~100)
+   * @param[in] thumb2 A value for the thumb2 finger (0~100)
    * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
    * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
    * @return ReturnType
@@ -1441,6 +1441,147 @@ class Cobot {
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
+
+
+  /**
+   * This function executes arc generation signals.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] initial_wait A value for the initial waiting in seconds (s).
+   * @param[in] speed A value for the speed while welding (mm/s).
+   * @param[in] accel A value for the acceleration while welding (mm/ss).
+   * @param[in] welding_current A value for the welding current while welding (A).
+   * @param[in] voltage_out_condition 0: use offset voltage value compare to welding current, 1: use manual voltage value.
+   * @param[in] voltage A value for the voltage (V). This value must be set differently depending on voltage_out_condition.
+   * @param[in] use_arc_timeout 0: use timeout for the arc generation, 1: not use timeout condition.
+   * @param[in] arc_timeout A timeout value for the arc generation in seconds (s).
+   * @param[in] wait_after_arc A value for waiting after the arc generation detected in seconds (s).
+   * @param[in] when_pause 0: normal pause (system will do none about welding under pause), 1: control welding signal (system will handle welding signal for resuming)
+   * @param[in] speed_bar_under_arc 0: use default speed bar value, 1: use 100% speed bar value
+   * @param[in] arc_retries A value for the number of retries.
+   * @param[in] retries_interval A value for the interval of retries in seconds (s).
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType arc_on(ResponseCollector& response_collector,
+                    double initial_wait, double speed, double accel, double welding_current, 
+                    int voltage_out_condition, double voltage, int use_arc_timeout, double arc_timeout, 
+                    double wait_after_arc, int when_pause, int speed_bar_under_arc, int arc_retries, double retries_interval,
+                    double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "arc_welding_macro " << "1,0," << (double)initial_wait << "," << (double)speed << "," << (double)accel << "," << (double)welding_current << "," << (int)voltage_out_condition
+       << "," << (double)voltage << "," << (double)arc_timeout << "," << (double)wait_after_arc << "," << (int)when_pause << "," << (int)speed_bar_under_arc << "," << (int)use_arc_timeout
+       << "," << (int)arc_retries << (double)retries_interval;
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function ends arc.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] initial_wait A value for the initial waiting in seconds (s).
+   * @param[in] welding_current A value for the welding current while welding (A).
+   * @param[in] voltage_out_condition 0: use offset voltage value compare to welding current, 1: use manual voltage value.
+   * @param[in] voltage A value for the voltage (V). This value must be set differently depending on voltage_out_condition.
+   * @param[in] wait_welding_finishing A value for waiting after the arc generation detected in seconds (s).
+   * @param[in] wait_after_finishing A value for waiting after the arc generation detected in seconds (s).
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType arc_off(ResponseCollector& response_collector,
+                    double initial_wait, double welding_current, int voltage_out_condition, double voltage, double wait_welding_finishing, double wait_after_finishing,
+                    double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "arc_welding_macro " << "2,0," << (double)initial_wait << ",0,0," << (double)welding_current << "," << (int)voltage_out_condition << "," << (double)voltage 
+       << "," << (double)wait_welding_finishing << "," << (double)wait_after_finishing << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function changes arc welding conditions.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] initial_wait A value for the initial waiting in seconds (s).
+   * @param[in] welding_current A value for the welding current while welding (A).
+   * @param[in] voltage_out_condition 0: use offset voltage value compare to welding current, 1: use manual voltage value.
+   * @param[in] voltage A value for the voltage (V). This value must be set differently depending on voltage_out_condition.
+   * @param[in] wait_welding_finishing A value for waiting after the arc generation detected in seconds (s).
+   * @param[in] wait_after_finishing A value for waiting after the arc generation detected in seconds (s).
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType arc_set(ResponseCollector& response_collector,
+                    double speed, double accel, double welding_current, int voltage_out_condition, double voltage, 
+                    double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "arc_welding_macro " << "3,0,0," << (double)speed << "," << (double)accel << "," << (double)welding_current << "," << (int)voltage_out_condition
+       << "," << (double)voltage << ",0,0,0,0,0,0,0"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function starts arc_sensing
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] sensing_input_channel A analog input channel where the current sensor is attached.
+   * @param[in] tracking_target_value 0: Time based setting - set the average value for dt2 as the target value, 1: Constant target - set the known constant for dt2 as the target value.
+   * @param[in] dt1 waiting time for steady sensing input after the arcing signal from welder in seconds (s).
+   * @param[in] dt2 when tracking_target_value is 0, dt2 is the sampling time to calculate the average target value in seconds (s). when tracking_target_value is 1, dt2 is the constant target voltage (V).
+   * @param[in] frame The arc sensing control will be executed w.r.t this frame. 0: Global(Base), 1: Local(TCP Current), 2~4: User0~2, 5: Target(TCP target).
+   * @param[in] axis The arc sensing control will be executed along this axis. 0: X-axis, 1: Y-axis, 2: Z-axis.
+   * @param[in] tracking_gain The gain for tracking (speed/error).
+   * @param[in] variation_limit The variation limit for arc sensing control (mm).
+   * @param[in] lpf The passing low Hertz (Hz).
+   * @param[in] variation_speed_limit The variation speed limit for arc sensing control (mm/s).
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType arc_sensing_on(ResponseCollector& response_collector, int sensing_input_channel, int tracking_target_value, double dt1, double dt2, 
+                            int frame, int axis, double tracking_gain, double variation_limit, double lpf, double variation_speed_limit, 
+                            double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "arc_sensing_scheme 1,"<< (int)sensing_input_channel << "," << (int)tracking_target_value << "," << (double)dt1 << "," << (double)dt2 << ",0,0,0,0,0," << (int)frame << (int)axis << "," << (double)tracking_gain 
+       << (double)variation_limit << "," << (double)lpf << (double)variation_speed_limit << ",0,0,0,0,0"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function ends arc_sensing
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType arc_sensing_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "arc_sensing_scheme 0,0,0,0.1,0.1,5,0,0,0,0,0,2,10,5,100,50,0,0,0,0,0"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
 
   ReturnType task_load(ResponseCollector& response_collector, std::string program_name, double timeout = -1.,
                        bool return_on_error = true) {
