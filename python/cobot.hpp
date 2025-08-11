@@ -1671,7 +1671,7 @@ ReturnType
            py::arg("response_collector"), py::arg("initial_wait"), py::arg("welding_current"), py::arg("voltage_out_condition"), py::arg("voltage"), 
            py::arg("wait_welding_finishing"), py::arg("wait_after_finishing"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
-      .def("arc_set", &PyCobot<T>::arc_off,
+      .def("arc_set", &PyCobot<T>::arc_set,
            py::arg("response_collector"), py::arg("speed"), py::arg("accel"), py::arg("welding_current"), py::arg("voltage_out_condition"), py::arg("voltage"), 
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("arc_sensing_on", &PyCobot<T>::arc_sensing_on,
