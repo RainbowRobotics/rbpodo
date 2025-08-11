@@ -1,3 +1,9 @@
+## v0.16.6 (2025-08-11)
+
+### 🐛 Fixes
+
+- few functions about welding has been added
+
 ## v0.16.5 (2025-08-11)
 
 ### 🐛 Fixes
