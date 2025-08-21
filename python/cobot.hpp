@@ -129,8 +129,12 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_on,
                         (int, _a)(int, _b)(double, _c)(double, _d)(int, _e)(int, _f)(double, _g)(double, _h)(double, _i)(double, _j)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_off, (double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, tcp_weave_on,
+                        (int, _a)(int, _b)(int, _c)(double, _d)(double, _e)(double, _f)(double, _g)(double, _h)(double, _i)(double, _j)
+                        (double, _k)(double, _l)(double, _m)(double, _n)(double, _o)(double, _p)(double, _q)(double, _r)
+                        (double, _s)(double, _t)(double, _u)(double, _v)(double, _w)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, tcp_weave_off, (double, _to)(bool, _roe))
 
-                        
 
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_load, (std::string, _a)(double, _to)(bool, _roe))  // NOLINT
   ASYNC_FUNC_WRAPPER_RC(Cobot, task_play, (double, _to)(bool, _roe))
@@ -1679,6 +1683,13 @@ ReturnType
            py::arg("frame"), py::arg("axis"), py::arg("tracking_gain"), py::arg("variation_limit"), py::arg("lpf"), py::arg("variation_speed_limit"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("arc_sensing_off", &PyCobot<T>::arc_sensing_off,
+           py::arg("response_collector"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("tcp_weave_on", &PyCobot<T>::tcp_weave_on,
+           py::arg("response_collector"), py::arg("type"), py::arg("torch_axis"), py::arg("weaving_axis"), py::arg("frame_tilt"), 
+           py::arg("frame_rot"), py::arg("frame_distort"), py::arg("mag_1"), py::arg("mag_2"), py::arg("vel_1"), py::arg("vel_2"), 
+           py::arg("t1"), py::arg("t2"), py::arg("t3"), py::arg("t4"), py::arg("scale_y"), py::arg("offset_y"), py::arg("bending"), py::arg("swing"), 
+           py::arg("frame_option"), py::arg("drag_rate"), py::arg("user_Rx"), py::arg("user_Ry"), py::arg("user_Rz"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("tcp_weave_off", &PyCobot<T>::tcp_weave_off,
            py::arg("response_collector"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
 
 

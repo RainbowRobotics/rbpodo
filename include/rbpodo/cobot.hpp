@@ -1538,7 +1538,7 @@ class Cobot {
    * This function starts arc_sensing
    * 
    * @param[in] response_collector A collector object to accumulate and manage the response message.
-   * @param[in] sensing_input_channel A analog input channel where the current sensor is attached.
+   * @param[in] sensing_input_channel An analog input channel where the current sensor is attached.
    * @param[in] tracking_target_value 0: Time based setting - set the average value for dt2 as the target value, 1: Constant target - set the known constant for dt2 as the target value.
    * @param[in] dt1 waiting time for steady sensing input after the arcing signal from welder in seconds (s).
    * @param[in] dt2 when tracking_target_value is 0, dt2 is the sampling time to calculate the average target value in seconds (s). when tracking_target_value is 1, dt2 is the constant target voltage (V).
@@ -1582,6 +1582,117 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  /**
+   * This function starts multi_directional_arc_sensing
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] sensing_input_channel A analog input channel where the current sensor is attached.
+   * @param[in] t1 waiting time for steady sensing input after the arcing signal from welder in seconds (s).
+   * @param[in] t2 the sampling time to calculate the average target value in seconds (s).
+   * @param[in] lpf A analog input channel where the current sensor is attached.
+   * @param[in] fd_Kp P gain for the feeding directional control.
+   * @param[in] fd_Ki I gain for the feeding directional control
+   * @param[in] fd_anti_wind_rate the anti wind-up rate for the feeding directional control.
+   * @param[in] fd_max_deviation the deviation saturation for the feeding directional control (mm).
+   * @param[in] wd_Kp P gain for the weaving directional control.
+   * @param[in] wd_Ki I gain for the weaving directional control.
+   * @param[in] wd_anti_wind_rate the anti wind-up rate for the weaving directional control.
+   * @param[in] wd_max_deviation the deviation saturation for the weaving directional control (mm).
+   * @param[in] average_window 0: Half Period, 1: Full Period
+   * @param[in] weaving_direction_rate the deviation saturation for the weaving directional control (mm).
+   * @param[in] weaving_direction_reference A analog input channel where the current sensor is attached.
+   * @param[in] weighting_mode A analog input channel where the current sensor is attached.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType multi_directional_arc_sensing_on(ResponseCollector& response_collector, int sensing_input_channel, double t1, double t2, double lpf, double fd_Kp, double fd_Ki,
+                                              double fd_anti_wind_rate, double fd_max_deviation, double wd_Kp, double wd_Ki, double wd_anti_wind_rate, double wd_max_deviation,
+                                              int average_window, double weaving_direction_rate, double weaving_direction_reference, int weighting_mode,
+                                              double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "tcp_arc_sensing_scheme 1,"<< (int)sensing_input_channel << "," << (double)t1 << "," << (double)t2 << "," << (double)lpf << "," << (double)fd_Kp << "," << (double)fd_Ki << ","
+       << (double)fd_anti_wind_rate << "," << (double)fd_max_deviation << "," << (double)wd_Kp << "," << (double)wd_Ki << "," << (double)wd_anti_wind_rate << "," << (double)wd_max_deviation
+       << "," << (int)average_window << "," << (double)weaving_direction_rate << "," << (double)weaving_direction_reference << "," << (double)weighting_mode << ",0,0,0,0"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function ends multi_arc_sensing
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType multi_directional_arc_sensing_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "tcp_arc_sensing_scheme 0,0,0,0,50,0,0,0.2,5,0,0,0.2,5,1,0,0,2,0,0,0,0"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function starts weaving motion
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] type 0: No weave, 1: Trapezoidal, 2: SineWave, 3:Triangle, 4: C-wave, 5: Circle
+   * @param[in] torch_axis select (-) direction of your torch's heading direction w.r.t TCP frame. 0: X, 1: Y, 2: Z, 3: -X, 4:-Y, 5:-Z
+   * @param[in] weaving_axis select default weaving direction w.r.t TCP frame. 0: X, 1: Y, 2: Z, 3: -X, 4:-Y, 5:-Z
+   * @param[in] frame_tilt a tilt angle along motion axis where motion axis is weaving axis cross torch axis with right-hand rule. (deg)
+   * @param[in] frame_rot a rotation angle along torch axis after the tilt. (deg)
+   * @param[in] frame_distort a distortion angle along torch axis will reduce the angle between weaving axis and motion axis. (deg)
+   * @param[in] mag_1 a weaving amplitude along (+) weaving axis. (mm)
+   * @param[in] mag_2 a weaving amplitude along (-) weaving axis. (mm)
+   * @param[in] vel_1 a weaving velocity along (+) weaving axis. (mm/s)
+   * @param[in] vel_2 a weaving velocity along (-) weaving axis. (mm/s)
+   * @param[in] t1 Trapezoidal: a holding time at mag_1.
+   * @param[in] t2 Trapezoidal: a holding time before transitioning from (+) to (-) relative to weaving axis.
+   * @param[in] t3 Trapezoidal: a holding time at mag_2.
+   * @param[in] t4 Trapezoidal: a holding time before transitioning from (-) to (+) relative to weaving axis.
+   * @param[in] scale_y a scaling factor along weaving axis. (%)
+   * @param[in] offset_y an offset value along weaving axis. (mm)
+   * @param[in] bending a bending value for the weaving motion along torch axis. (%)
+   * @param[in] swing a swing value for the weaving motion. this value will generate the tcp's swinging motion along motion axis. (deg)
+   * @param[in] frame_option 0: Real time TCP based, 1: Trajectory based
+   * @param[in] drag_rate a value for the drag rate. (%)
+   * @param[in] user_Rx an additional rotation value of x among euler ZY'X''. (deg)
+   * @param[in] user_Ry an additional rotation value of y among euler ZY'X''. (deg)
+   * @param[in] user_Rz an additional rotation value of z among euler ZY'X''. (deg)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+  ReturnType tcp_weave_on(ResponseCollector& response_collector, int type, int torch_axis, int weaving_axis, float frame_tilt, float frame_rot, float frame_distort, 
+    float mag_1, float mag_2, float vel_1, float vel_2, float t1, float t2, float t3, float t4, float scale_y, float offset_y, float bending, float swing, 
+    int frame_option, float drag_rate, float user_Rx, float user_Ry, float user_Rz, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "tcp_weave_on(" << (int)type << "," << (int)torch_axis << "," << (int)weaving_axis << "," << (float)frame_tilt << "," << (float)frame_rot << "," << (float)frame_distort << ","
+     << (float)mag_1 << "," << (float)mag_2 << "," << (float)vel_1 << "," << (float)vel_2 << "," << (float)t1 << "," << (float)t2 << "," << (float)t3 << "," << (float)t4 << ","
+       << (float)scale_y << "," << (float)offset_y << "," << (float)bending << "," << (float)swing << ","
+        << (int)frame_option << "," << (float)drag_rate << "," << (float)user_Rx << "," << (float)user_Ry << "," << (float)user_Rz << ")"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  ReturnType tcp_weave_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "tcp_weave_off()"
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+  
+
+
+  
 
   ReturnType task_load(ResponseCollector& response_collector, std::string program_name, double timeout = -1.,
                        bool return_on_error = true) {
