@@ -1589,7 +1589,7 @@ class Cobot {
    * @param[in] sensing_input_channel A analog input channel where the current sensor is attached.
    * @param[in] t1 waiting time for steady sensing input after the arcing signal from welder in seconds (s).
    * @param[in] t2 the sampling time to calculate the average target value in seconds (s).
-   * @param[in] lpf A analog input channel where the current sensor is attached.
+   * @param[in] lpf The passing low Hertz (Hz).
    * @param[in] fd_Kp P gain for the feeding directional control.
    * @param[in] fd_Ki I gain for the feeding directional control
    * @param[in] fd_anti_wind_rate the anti wind-up rate for the feeding directional control.
@@ -1681,6 +1681,16 @@ class Cobot {
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
+
+
+  /**
+   * This function ends weaving motion
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
 
 
   ReturnType tcp_weave_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
