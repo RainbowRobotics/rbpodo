@@ -1615,7 +1615,7 @@ class Cobot {
     std::stringstream ss;
     ss << "tcp_arc_sensing_scheme 1,"<< (int)sensing_input_channel << "," << (double)t1 << "," << (double)t2 << "," << (double)lpf << "," << (double)fd_Kp << "," << (double)fd_Ki << ","
        << (double)fd_anti_wind_rate << "," << (double)fd_max_deviation << "," << (double)wd_Kp << "," << (double)wd_Ki << "," << (double)wd_anti_wind_rate << "," << (double)wd_max_deviation
-       << "," << (int)average_window << "," << (double)weaving_direction_rate << "," << (double)weaving_direction_reference << "," << (double)weighting_mode << ",0,0,0,0"
+       << "," << (int)average_window << "," << (double)weaving_direction_rate << "," << (double)weaving_direction_reference << "," << (double)weighting_mode << ",0,0,0,0";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -1633,7 +1633,7 @@ class Cobot {
 
   ReturnType multi_directional_arc_sensing_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
-    ss << "tcp_arc_sensing_scheme 0,0,0,0,50,0,0,0.2,5,0,0,0.2,5,1,0,0,2,0,0,0,0"
+    ss << "tcp_arc_sensing_scheme 0,0,0,0,50,0,0,0.2,5,0,0,0.2,5,1,0,0,2,0,0,0,0";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -1677,7 +1677,7 @@ class Cobot {
     ss << "tcp_weave_on(" << (int)type << "," << (int)torch_axis << "," << (int)weaving_axis << "," << (float)frame_tilt << "," << (float)frame_rot << "," << (float)frame_distort << ","
      << (float)mag_1 << "," << (float)mag_2 << "," << (float)vel_1 << "," << (float)vel_2 << "," << (float)t1 << "," << (float)t2 << "," << (float)t3 << "," << (float)t4 << ","
        << (float)scale_y << "," << (float)offset_y << "," << (float)bending << "," << (float)swing << ","
-        << (int)frame_option << "," << (float)drag_rate << "," << (float)user_Rx << "," << (float)user_Ry << "," << (float)user_Rz << ")"
+        << (int)frame_option << "," << (float)drag_rate << "," << (float)user_Rx << "," << (float)user_Ry << "," << (float)user_Rz << ")";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -1695,7 +1695,7 @@ class Cobot {
 
   ReturnType tcp_weave_off(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
-    ss << "tcp_weave_off()"
+    ss << "tcp_weave_off()";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }

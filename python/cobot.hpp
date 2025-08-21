@@ -129,6 +129,10 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_on,
                         (int, _a)(int, _b)(double, _c)(double, _d)(int, _e)(int, _f)(double, _g)(double, _h)(double, _i)(double, _j)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, arc_sensing_off, (double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, multi_directional_arc_sensing_on,
+                        (int, _a)(int, _b)(int, _c)(double, _d)(double, _e)(double, _f)(double, _g)(double, _h)(double, _i)(double, _j)
+                        (double, _k)(double, _l)(double, _m)(double, _n)(double, _o)(double, _p)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, multi_directional_arc_sensing_off, (double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, tcp_weave_on,
                         (int, _a)(int, _b)(int, _c)(double, _d)(double, _e)(double, _f)(double, _g)(double, _h)(double, _i)(double, _j)
                         (double, _k)(double, _l)(double, _m)(double, _n)(double, _o)(double, _p)(double, _q)(double, _r)
@@ -1684,6 +1688,13 @@ ReturnType
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("arc_sensing_off", &PyCobot<T>::arc_sensing_off,
            py::arg("response_collector"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("multi_directional_arc_sensing_on", &PyCobot<T>::multi_directional_arc_sensing_on,
+           py::arg("response_collector"), py::arg("sensing_input_channel"), py::arg("t1"), py::arg("t2"), py::arg("lpf"), 
+           py::arg("fd_Kp"), py::arg("fd_Ki"), py::arg("fd_anti_wind_rate"), py::arg("fd_max_deviation"), py::arg("wd_Kp"), py::arg("wd_Ki"), 
+           py::arg("wd_anti_wind_rate"), py::arg("wd_max_deviation"), py::arg("average_window"), py::arg("weaving_direction_rate"), 
+           py::arg("weaving_direction_reference"), py::arg("weighting_mode"), py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("multi_directional_arc_sensing_off", &PyCobot<T>::multi_directional_arc_sensing_off,
+           py::arg("response_collector"), py::arg("timeout") = -1., py::arg("return_on_error") = false)   
       .def("tcp_weave_on", &PyCobot<T>::tcp_weave_on,
            py::arg("response_collector"), py::arg("type"), py::arg("torch_axis"), py::arg("weaving_axis"), py::arg("frame_tilt"), 
            py::arg("frame_rot"), py::arg("frame_distort"), py::arg("mag_1"), py::arg("mag_2"), py::arg("vel_1"), py::arg("vel_2"), 
