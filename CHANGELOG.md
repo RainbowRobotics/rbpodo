@@ -1,3 +1,10 @@
+## v0.16.8 (2025-08-21)
+
+### 🐛 Fixes
+
+- weaving added
+- weaving added
+
 ## v0.16.7 (2025-08-11)
 
 ### 🐛 Fixes
