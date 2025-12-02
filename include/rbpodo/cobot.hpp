@@ -1456,7 +1456,7 @@ class Cobot {
    * @param[in] use_arc_timeout 0: use timeout for the arc generation, 1: not use timeout condition.
    * @param[in] arc_timeout A timeout value for the arc generation in seconds (s).
    * @param[in] wait_after_arc A value for waiting after the arc generation detected in seconds (s).
-   * @param[in] when_pause 0: normal pause (system will do none about welding under pause), 1: control welding signal (system will handle welding signal for resuming)
+   * @param[in] when_pause 0: normal pause (system will do none about welding under pause),  1: control welding signal (system will handle welding signal for resuming)
    * @param[in] speed_bar_under_arc 0: use default speed bar value, 1: use 100% speed bar value
    * @param[in] arc_retries A value for the number of retries.
    * @param[in] retries_interval A value for the interval of retries in seconds (s).
