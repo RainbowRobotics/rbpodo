@@ -1474,7 +1474,7 @@ class Cobot {
     std::stringstream ss;
     ss << "arc_welding_macro " << "1,0," << (double)initial_wait << "," << (double)speed << "," << (double)accel << "," << (double)welding_current << "," << (int)voltage_out_condition
        << "," << (double)voltage << "," << (double)arc_timeout << "," << (double)wait_after_arc << "," << (int)when_pause << "," << (int)speed_bar_under_arc << "," << (int)use_arc_timeout
-       << "," << (int)arc_retries << (double)retries_interval;
+       << "," << (int)arc_retries << "," << (double)retries_interval;
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -1559,7 +1559,7 @@ class Cobot {
                             double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
     ss << "arc_sensing_scheme 1,"<< (int)sensing_input_channel << "," << (int)tracking_target_value << "," << (double)dt1 << "," << (double)dt2 << ",0,0,0,0,0," << (int)frame << (int)axis << "," << (double)tracking_gain 
-       << (double)variation_limit << "," << (double)lpf << (double)variation_speed_limit << ",0,0,0,0,0";
+       << (double)variation_limit << "," << (double)lpf << "," << (double)variation_speed_limit << ",0,0,0,0,0";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
