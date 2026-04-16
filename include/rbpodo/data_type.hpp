@@ -552,10 +552,27 @@ enum class BlendingOption {
   Distance    ///< Blend based on Distance
 };
 
+enum class PROBlendingOption { 
+  Linear = 0,  ///< 
+  Corner = 1,  ///< 
+  Distance = 2, ///<
+  Ratio = 3     ///<
+};
+
 enum class MovePBOption { 
   Intended = 0,  ///< Intended (Follows the rotation value taught by the user)
   Constant,      ///< Constant (Keep the rotation value of the starting position)
   Smooth = 3     ///< Smooth (Similar to Intended, but with a smooth rate of rotation change)
+};
+
+enum class MoveXBOption { 
+  Speed = 0,     ///< Speed-based blending option
+  Position = 1   ///< Position-based blending option
+};
+
+enum class MovePROOption { 
+  Intended = 0,  ///< Intended (Follows the rotation value taught by the user)
+  Constant = 1   ///< Constant (Keep the rotation value of the starting position)
 };
 
 enum class MoveITPLOption {

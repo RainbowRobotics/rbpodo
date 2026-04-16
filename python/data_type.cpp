@@ -40,10 +40,24 @@ void pybind11_data_type(py::module_& m) {
       .value("Ratio", BlendingOption::Ratio, "Blend based on Ratio")
       .value("Distance", BlendingOption::Distance, "Blend based on Distance");
 
+  py::enum_<PROBlendingOption>(m, "PROBlendingOption")
+      .value("Linear", PROBlendingOption::Linear, "Linear blending option")
+      .value("Corner", PROBlendingOption::Corner, "Corner blending option")
+      .value("Distance", PROBlendingOption::Distance, "Distance blending option")
+      .value("Ratio", PROBlendingOption::Ratio, "Ratio blending option");
+
   py::enum_<MovePBOption>(m, "MovePBOption")
       .value("Intended", MovePBOption::Intended, "Intended (Follows the rotation value taught by the user)")
       .value("Constant", MovePBOption::Constant, "Constant (Keep the rotation value of the starting position)")
       .value("Smooth", MovePBOption::Smooth, "Smooth (Similar to Intended, but with a smooth rate of rotation change)");
+
+  py::enum_<MoveXBOption>(m, "MoveXBOption")
+        .value("Speed", MoveXBOption::Speed, "Speed-based blending option")
+        .value("Position", MoveXBOption::Position, "Position-based blending option");
+
+  py::enum_<MovePROOption>(m, "MovePROption")
+        .value("Intended", MovePROOption::Intended, "Intended (Follows the rotation value taught by the user)")
+        .value("Constant", MovePROOption::Constant, "Constant (Keep the rotation value of the starting position)");
 
   py::enum_<MoveITPLOption>(m, "MoveITPLOption")
       .value("Intended", MoveITPLOption::Intended, "Intended (Follows the rotation value taught by the user)")

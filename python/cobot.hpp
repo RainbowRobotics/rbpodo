@@ -57,6 +57,16 @@ class PyCobot : public Cobot<EigenVector> {
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_pb_add,
                         (PointConstRef, _a)(double, _b)(BlendingOption, _c)(double, _d)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_pb_run, (double, _a)(MovePBOption, _b)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_xb_clear, (double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_xb_p_add,
+                                            (PointConstRef, _a)(double, _b)(double, _c)(BlendingOption, _d)(double, _e)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_xb_j_add,
+                                            (JointConstRef, _a)(double, _b)(double, _c)(BlendingOption, _d)(double, _e)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_xb_run, (MoveXBOption, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_pro_clear, (double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_pro_add,
+                                            (PointConstRef, _a)(double, _b)(PROBlendingOption, _c)(double, _d)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, move_pro_run, (double, _a)(MovePROOption, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_itpl_clear, (double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_itpl_add, (PointConstRef, _a)(double, _b)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, move_itpl_run, (double, _a)(MoveITPLOption, _b)(double, _to)(bool, _roe))
@@ -1301,6 +1311,179 @@ Returns
 -------
 ReturnType
 )pbdoc")
+
+    .def("move_xb_clear", &PyCobot<T>::move_xb_clear, py::arg("response_collector"), py::arg("timeout") = -1.,
+        py::arg("return_on_error") = false, R"pbdoc(
+    Clear all points added for MoveXB (L-type motion).
+    
+    Parameters
+    ----------
+    response_collector : ResponseCollector
+        A collector object to accumulate and manage the response message.
+    timeout : float
+        The maximum duration (in seconds) to wait for a response before timing out.
+    return_on_error : bool
+        A boolean flag indicating whether the function should immediately return upon encountering an error.
+    
+    Returns
+    -------
+    ReturnType
+    )pbdoc")
+
+    .def("move_xb_p_add", &PyCobot<T>::move_xb_p_add, py::arg("response_collector"), py::arg("point"), py::arg("speed"),
+        py::arg("acceleration"), py::arg("option"), py::arg("blending_value"),py::arg("timeout") = -1., py::arg("return_on_error") = false,
+        R"pbdoc(
+This function adds the points used in MoveXB (L-type motion) to the list.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+point : numpy.ndarray(shape=(6, 1))
+    Target TCP posture. (Point)
+speed : float
+    Speed (Unit: mm/s)
+acceleration : float
+    Acceleration (Unit: mm/s^2)
+option : BlendingOption
+    Blending type (0: ratio-based blending, 1: distance-based blending)
+blending_value : float
+    Blending value (0~1 for ratio-based or distance in mm for distance-based)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+
+Examples
+--------
+>>> robot.move_xb_p_add(rc, np.array([100, 200, 200, 90, 0, 0]), 200.0, 400.0, rb.BlendingOption.Ratio, 0.5)
+)pbdoc")
+    .def("move_xb_j_add", &PyCobot<T>::move_xb_j_add, py::arg("response_collector"), py::arg("joint"), py::arg("speed"),
+        py::arg("acceleration"), py::arg("option"), py::arg("blending_value"), py::arg("timeout") = -1., py::arg("return_on_error") = false,
+        R"pbdoc(
+This function adds the points used in MoveXB (J-type motion) to the list.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+joint : numpy.ndarray(shape=(6, 1))
+    Target joint angles.
+speed : float
+    Speed (Unit: %)
+acceleration : float
+    Acceleration (Unit: %)
+option : BlendingOption
+    Blending type (0: ratio-based blending, 1: distance-based blending)
+blending_value : float
+    Blending value (0~1 for ratio-based or distance in mm for distance-based)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+
+Examples
+--------
+>>> robot.move_xb_j_add(rc, np.zeros((6,)), 50.0, 50.0, rb.BlendingOption.Ratio, 0.5)
+)pbdoc")
+    .def("move_xb_run", &PyCobot<T>::move_xb_run, py::arg("response_collector"), py::arg("option"), py::arg("timeout") = -1.,
+        py::arg("return_on_error") = false, R"pbdoc(
+Execute MoveXB (L-type motion) using the points added by move_xb_p_add.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+option : BlendingOption
+    Blending type (0: ratio-based blending, 1: distance-based blending)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+
+    .def("move_pro_clear", &PyCobot<T>::move_pro_clear, py::arg("response_collector"), py::arg("timeout") = -1.,
+        py::arg("return_on_error") = false, R"pbdoc(
+Clear all points added for MovePro.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+
+    .def("move_pro_add", &PyCobot<T>::move_pro_add, py::arg("response_collector"), py::arg("point"), py::arg("speed"),
+        py::arg("option"), py::arg("blending_value"), py::arg("timeout") = -1., py::arg("return_on_error") = false, R"pbdoc(
+This function adds the points used in MovePro to the list.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+point : numpy.ndarray(shape=(6, 1))
+    Target TCP posture. (Point)
+speed : float
+    Speed (Unit: mm/s)
+option : PROBlendingOption
+    Point type option (0: Line, 1: Corner (Arc), 2: Blend (distance-based), 3: Blend (ratio-based))
+blending_value : float
+    Blending value (used for type 2 or 3)
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+
+Examples
+--------
+>>> robot.move_pro_add(rc, np.array([100, 200, 200, 90, 0, 0]), 200.0, rb.PROBlendingOption.Ratio, 0.5)
+)pbdoc")
+
+    .def("move_pro_run", &PyCobot<T>::move_pro_run, py::arg("response_collector"), py::arg("acceleration"), py::arg("option"), 
+        py::arg("timeout") = -1., py::arg("return_on_error") = false,R"pbdoc(
+Execute MovePro using the points added by move_pro_add.
+
+Parameters
+----------
+response_collector : ResponseCollector
+    A collector object to accumulate and manage the response message.
+acceleration : float
+    Acceleration (Unit: mm/s^2)
+option : PROMoveOption
+    Move option for MovePro.
+timeout : float
+    The maximum duration (in seconds) to wait for a response before timing out.
+return_on_error : bool
+    A boolean flag indicating whether the function should immediately return upon encountering an error.
+
+Returns
+-------
+ReturnType
+)pbdoc")
+
       .def("move_itpl_clear", &PyCobot<T>::move_itpl_clear, py::arg("response_collector"), py::arg("timeout") = -1.,
            py::arg("return_on_error") = false, R"pbdoc(
 Initialize (Clear) the point list to be used in MoveITPL.
