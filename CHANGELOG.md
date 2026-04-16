@@ -1,3 +1,11 @@
+## v0.16.10 (2026-04-16)
+
+### 🐛 Fixes
+
+- move_xb, move_pro add
+- minor bug fixed
+- arc on fixed
+
 ## v0.16.9 (2025-08-21)
 
 ### 🐛 Fixes
