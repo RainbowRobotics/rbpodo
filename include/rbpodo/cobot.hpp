@@ -986,6 +986,136 @@ class Cobot {
   }
 
   /**
+   * Initialize (Clear) the point list to be used in MoveXB (L-type and J-type blending).
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_xb_clear(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+    sock_.send("move_xb_clear()");
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function adds the points used in MoveXB to the list. (L-type motion)
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] point Target TCP posture. (Point)
+   * @param[in] speed Speed (Unit: mm/s)
+   * @param[in] acceleration Acceleration (Unit: mm/s^2)
+   * @param[in] option Blending type (0: ratio-based blending, 1: distance-based blending)
+   * @param[in] blending_value Blending value (0~1 for ratio-based or distance in mm for distance-based)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_xb_p_add(ResponseCollector& response_collector, PointConstRef point, double speed, double acceleration,
+                         BlendingOption option, double blending_value, double timeout = -1.,
+                         bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "move_xb_add(" << Type::point_to_string(point) << "," << speed << "," << acceleration << "," << (int)option << "," << blending_value
+       << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function adds the points used in MoveXB to the list. (J-type motion)
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] joint Target joint angles. (Joint)
+   * @param[in] speed Speed (Unit: %)
+   * @param[in] acceleration Acceleration (Unit: %)
+   * @param[in] option Blending type (0: ratio-based blending, 1: distance-based blending)
+   * @param[in] blending_value Blending value (0~1 for ratio-based or distance in mm for distance-based)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_xb_j_add(ResponseCollector& response_collector, JointConstRef joint, double speed, double acceleration,
+                         BlendingOption option, double blending_value, double timeout = -1.,
+                         bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "move_xb_add(" << Type::joint_to_string(joint) << "," << speed << "," << acceleration << "," << (int)option << "," << blending_value
+       << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function executes MoveXB using the points added in move_xb_p_add or move_xb_j_add.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] option Trajectory blending option (0: speed-based blending, 1: position-based blending)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_xb_run(ResponseCollector& response_collector, MoveXBOption option,
+                         double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "move_xb_run(" << (int)option << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * Initialize (Clear) the point list to be used in MovePro.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_pro_clear(ResponseCollector& response_collector, double timeout = -1., bool return_on_error = false) {
+    sock_.send("move_pro_clear()");
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function adds the points used in MovePro to the list.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] point Target TCP posture. (Point)
+   * @param[in] speed Speed (Unit: mm/s)
+   * @param[in] option Point type option (0: Line, 1: Corner (Arc), 2: Blend (distance-based), 3: Blend (ratio-based))
+   * @param[in] blending_value Blending value (used for type 2 or 3)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_pro_add(ResponseCollector& response_collector, PointConstRef point, double speed,
+                         PROBlendingOption option, double blending_value, double timeout = -1.,
+                         bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "move_pro_add(" << Type::point_to_string(point) << "," << speed << "," << (int)option << "," << blending_value
+       << ")";
+       std::cout << ss.str() << std::endl;
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function executes MovePro using the points added in move_pro_add.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] acceleration Acceleration (Unit: mm/s^2)
+   * @param[in] option Orientation option (0: Intended, 1: Constant)
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+  ReturnType move_pro_run(ResponseCollector& response_collector, double acceleration, MovePROOption option,
+                         double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "move_pro_run(" << acceleration << "," << (int)option << ")";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
    * Initialize (Clear) the point list to be used in MoveITPL.
    * 
    * @param[in] response_collector A collector object to accumulate and manage the response message.
