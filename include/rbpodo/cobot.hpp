@@ -1478,6 +1478,48 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+ReturnType gripper_rts_jegb_4285_initialization(
+    ResponseCollector& response_collector,
+    GripperConnectionPoint conn_point,
+    double timeout = -1.,
+    bool return_on_error = false)
+{
+  std::stringstream ss;
+  ss << "gripper_macro "
+     << static_cast<int>(GripperModel::JRT_JEGB_4285)
+     << "," << static_cast<int>(conn_point)
+     << ",0,0,0,0,0,0,0,0";
+
+  sock_.send(ss.str());
+  return wait_until_ack_message(
+      response_collector, timeout, return_on_error);
+}
+
+ReturnType gripper_rts_jegb_4285_position_control(
+    ResponseCollector& response_collector,
+    GripperConnectionPoint conn_point,
+    int target_position_ratio,
+    double timeout = -1.,
+    bool return_on_error = false)
+{
+  if (target_position_ratio < 0) {
+    target_position_ratio = 0;
+  } else if (target_position_ratio > 100) {
+    target_position_ratio = 100;
+  }
+
+  std::stringstream ss;
+  ss << "gripper_macro "
+     << static_cast<int>(GripperModel::JRT_JEGB_4285)
+     << "," << static_cast<int>(conn_point)
+     << ",2,0," << target_position_ratio
+     << ",0,0,0,0,0";
+
+  sock_.send(ss.str());
+  return wait_until_ack_message(
+      response_collector, timeout, return_on_error);
+}
+
   ReturnType gripper_koras_tooling_core_initialization(ResponseCollector& response_collector,
                                                   GripperConnectionPoint conn_point, int target_torque, int target_speed,
                                                   double timeout = -1., bool return_on_error = false) {
