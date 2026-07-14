@@ -1,3 +1,9 @@
+## v0.16.12 (2026-07-14)
+
+### 🐛 Fixes
+
+- use fixed cibuildwheel version
+
 ## v0.16.11 (2026-07-14)
 
 ### 🐛 Fixes
