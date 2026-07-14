@@ -646,7 +646,7 @@ class Cobot {
   ReturnType set_speed_multiplier(ResponseCollector& response_collector, double multiplier, double timeout = -1.,
                                   bool return_on_error = false) {
     std::stringstream ss;
-    ss << "set_speed_multiplier(" << multiplier << ")";
+    ss << "set_speed_multiply(" << multiplier << ")";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
@@ -663,7 +663,7 @@ class Cobot {
   ReturnType set_acc_multiplier(ResponseCollector& response_collector, double multiplier, double timeout = -1.,
                                 bool return_on_error = false) {
     std::stringstream ss;
-    ss << "set_acc_multiplier(" << multiplier << ")";
+    ss << "set_acc_multiply(" << multiplier << ")";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
