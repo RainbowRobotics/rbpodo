@@ -1804,10 +1804,10 @@ class Cobot {
     float mag_1, float mag_2, float vel_1, float vel_2, float t1, float t2, float t3, float t4, float scale_y, float offset_y, float bending, float swing, 
     int frame_option, float drag_rate, float user_Rx, float user_Ry, float user_Rz, double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
-    ss << "tcp_weave_on(" << (int)type << "," << (int)torch_axis << "," << (int)weaving_axis << "," << (float)frame_tilt << "," << (float)frame_rot << "," << (float)frame_distort << ","
+    ss << "tcp_weave_on(" << (int)type << "," << (int)torch_axis << "," << (int)weaving_axis << "," << (float)frame_tilt << "," << (float)frame_rot << "," << (float)frame_distort << ",0,0,0,0,"
      << (float)mag_1 << "," << (float)mag_2 << "," << (float)vel_1 << "," << (float)vel_2 << "," << (float)t1 << "," << (float)t2 << "," << (float)t3 << "," << (float)t4 << ","
        << (float)scale_y << "," << (float)offset_y << "," << (float)bending << "," << (float)swing << ","
-        << (int)frame_option << "," << (float)drag_rate << "," << (float)user_Rx << "," << (float)user_Ry << "," << (float)user_Rz << ")";
+        << (int)frame_option << "," << (float)drag_rate << "," << (float)user_Rx << "," << (float)user_Ry << "," << (float)user_Rz << ",0,0,0)";
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
