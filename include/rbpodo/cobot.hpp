@@ -1572,6 +1572,61 @@ class Cobot {
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }
 
+  /**
+   * This function executes initialization for DYNAMIXEL XM SERIES.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] mode 0: Current, 1: Position
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+  ReturnType gripper_dxl_xm_initialization(ResponseCollector& response_collector,
+                                                  int mode,
+                                                  double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::DYNAMIXEL_XM << ",0," << (int)mode << ",0,0,0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+  /**
+   * This function executes target current(mA) for DYNAMIXEL XM SERIES.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] mA target current value in mA.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+  ReturnType gripper_dxl_xm_set_target_current(ResponseCollector& response_collector,
+                                                  int mA, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::DYNAMIXEL_XM << ",0,2,0," << (int)mA << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return ReturnType(ReturnType::Success);
+  }
+
+  /**
+   * This function executes target position(tick) for DYNAMIXEL XM SERIES.
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] tick target position value in dxl tick.
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+  ReturnType gripper_dxl_xm_set_target_position(ResponseCollector& response_collector,
+                                                  int tick, double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "gripper_macro " << (int)GripperModel::DYNAMIXEL_XM << ",0,3,0," << (int)mA << ",0,0,0,0,0";
+    sock_.send(ss.str());
+    return ReturnType(ReturnType::Success);
+  }
+
 
   /**
    * This function executes arc generation signals.
@@ -1659,6 +1714,26 @@ class Cobot {
     std::stringstream ss;
     ss << "arc_welding_macro " << "3,0,0," << (double)speed << "," << (double)accel << "," << (double)welding_current << "," << (int)voltage_out_condition
        << "," << (double)voltage << ",0,0,0,0,0,0,0";
+    sock_.send(ss.str());
+    return wait_until_ack_message(response_collector, timeout, return_on_error);
+  }
+
+
+  /**
+   * This function starts arc_sensing
+   * 
+   * @param[in] response_collector A collector object to accumulate and manage the response message.
+   * @param[in] value 0: ff off 1: ff on
+   * @param[in] timeout The maximum duration (in seconds) to wait for a response before timing out.
+   * @param[in] return_on_error A boolean flag indicating whether the function should immediately return upon encountering an error.
+   * @return ReturnType
+   */
+
+
+  ReturnType set_ff_gain(ResponseCollector& response_collector, int value,
+                            double timeout = -1., bool return_on_error = false) {
+    std::stringstream ss;
+    ss << "set_ff_gain("<< (int)value << ")";;
     sock_.send(ss.str());
     return wait_until_ack_message(response_collector, timeout, return_on_error);
   }

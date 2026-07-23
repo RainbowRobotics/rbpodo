@@ -671,6 +671,9 @@ enum class GripperModel {
   GRK_Laser_Sensor,
   Any_AIR,
   Inspire_Humanoid_Hand,
+  N_A,
+  TESOLLO_3F_4F,
+  DYNAMIXEL_XM,
 };
 
 enum class GripperConnectionPoint { ToolFlange = 0, ControlBox, ToolFlange_Advanced };

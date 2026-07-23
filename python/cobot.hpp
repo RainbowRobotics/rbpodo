@@ -127,6 +127,15 @@ class PyCobot : public Cobot<EigenVector> {
                         (int, _a)(double, _to)(bool, _roe))
   ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_inspire_humanoid_hand_set_finger,
                         (int, _a)(int, _b)(int, _c)(int, _d)(int, _e)(int, _f)(int, _g)(double, _to)(bool, _roe))
+                        
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_dxl_xm_initialization,
+                        (int, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_dxl_xm_set_target_position,
+                        (int, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, gripper_dxl_xm_set_target_current,
+                        (int, _a)(double, _to)(bool, _roe))
+  ASYNC_FUNC_WRAPPER_RC(Cobot, set_ff_gain,
+                        (int, _a)(double, _to)(bool, _roe))
 
        
   ASYNC_FUNC_WRAPPER_RC(Cobot, arc_on,
@@ -1850,6 +1859,21 @@ ReturnType
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
       .def("gripper_inspire_humanoid_hand_set_finger", &PyCobot<T>::gripper_inspire_humanoid_hand_set_finger,
            py::arg("response_collector"), py::arg("function"), py::arg("little"), py::arg("ring"), py::arg("middle"), py::arg("index"), py::arg("thumb1"), py::arg("thumb2"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
+
+      .def("gripper_dxl_xm_initialization", &PyCobot<T>::gripper_dxl_xm_initialization,
+           py::arg("response_collector"), py::arg("mode"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_dxl_xm_set_target_position", &PyCobot<T>::gripper_dxl_xm_set_target_position,
+           py::arg("response_collector"), py::arg("tick"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+      .def("gripper_dxl_xm_set_target_current", &PyCobot<T>::gripper_dxl_xm_set_target_current,
+           py::arg("response_collector"), py::arg("mA"),
+           py::arg("timeout") = -1., py::arg("return_on_error") = false)
+
+      .def("set_ff_gain", &PyCobot<T>::set_ff_gain,
+           py::arg("response_collector"), py::arg("value"),
            py::arg("timeout") = -1., py::arg("return_on_error") = false)
 
 
