@@ -1622,7 +1622,7 @@ class Cobot {
   ReturnType gripper_dxl_xm_set_target_position(ResponseCollector& response_collector,
                                                   int tick, double timeout = -1., bool return_on_error = false) {
     std::stringstream ss;
-    ss << "gripper_macro " << (int)GripperModel::DYNAMIXEL_XM << ",0,3,0," << (int)mA << ",0,0,0,0,0";
+    ss << "gripper_macro " << (int)GripperModel::DYNAMIXEL_XM << ",0,3,0," << (int)tick << ",0,0,0,0,0";
     sock_.send(ss.str());
     return ReturnType(ReturnType::Success);
   }
